@@ -8,8 +8,10 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
+	"github.com/subosito/gotenv"
 
-	"github.com/rafischer1/react_inbox/handlers"
+	"github.com/rafischer1/react_inbox_db/handlers"
 )
 
 var db *sql.DB
@@ -30,21 +32,29 @@ func main() {
 	router.HandleFunc("/messages", handlers.PostMessage).Methods("POST")
 	router.HandleFunc("/messages/:id", handlers.EditMessage).Methods("PUT")
 	router.HandleFunc("/messages/:id", handlers.DeleteMessage).Methods("DELETE")
-	http.HandleFunc("/messages")
-	router.Handle("/", http.FileServer(http.Dir("./static/"))) // set router
-	err := http.ListenAndServe(":3000", nil)                   // set listen port
+
+	// set router
+	router.Handle("/", http.FileServer(http.Dir("./static/")))
+	// set listen port
+	err := http.ListenAndServe(":3000", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
 
 func initDb() {
+	// grab .env variables
+	gotenv.Load()
+	// call dbConfig function to set env variables
 	config := dbConfig()
 	var err error
+	// Loaded database info
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		config[dbhost], config[dbport],
 		config[dbuser], config[dbpass], config[dbname])
+	// print out database information for development
+	fmt.Println("db init info:", psqlInfo)
 
 	db, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
@@ -57,6 +67,7 @@ func initDb() {
 }
 
 func dbConfig() map[string]string {
+
 	conf := make(map[string]string)
 	host, ok := os.LookupEnv(dbhost)
 	if !ok {

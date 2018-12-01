@@ -15,7 +15,7 @@ type Message struct {
 * Get All
 *
 *************/
-func GetAllMessage() []Message {
+func GetAllMessages() []Message {
 	connStr := "user=artiefischer dbname=reactinboxdb sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -77,7 +77,7 @@ func PostMessage() []Message {
 *
 *************/
 
-func EditMessagek() []Message {
+func EditMessage() []Message {
 	fmt.Println("In the model edit")
 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
 	if err != nil {
@@ -105,8 +105,12 @@ func EditMessagek() []Message {
 *
 *************/
 
-// func DeleteMessage() []Message {
-// 	fmt.Println("In the model delete")
+func DeleteMessage() []Message {
+	var messages []Message
+	fmt.Println("In the model delete")
+	return messages
+}
+
 // 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
 // 	if err != nil {
 // 		panic(err)
