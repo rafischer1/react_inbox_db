@@ -4,6 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
+	"os"
+
+	"github.com/subosito/gotenv"
 )
 
 // Message the psql table messages
@@ -21,7 +25,8 @@ type Message struct {
 
 // GetAllMessages function
 func GetAllMessages() []Message {
-	connStr := "user=artiefischer dbname=reactinboxdb sslmode=disable"
+	connStr := dbInit()
+	fmt.Println("connStr:", connStr)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
@@ -45,8 +50,8 @@ func GetAllMessages() []Message {
 
 // PostMessage function
 func PostMessage() []Message {
-
-	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
+	connStr := dbInit()
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
@@ -75,7 +80,8 @@ func PostMessage() []Message {
 // EditMessage function
 func EditMessage() []Message {
 	fmt.Println("In the model edit")
-	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
+	connStr := dbInit()
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
@@ -99,8 +105,23 @@ func EditMessage() []Message {
 // DeleteMessage Model function
 func DeleteMessage() []Message {
 	var messages []Message
-	fmt.Println("In the model delete")
+
+	connStr := dbInit()
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("In the model delete", db)
 	return messages
+}
+
+// initialize connection string for db using.env
+func dbInit() string {
+	gotenv.Load()
+	dbname := os.Getenv("DBNAME")
+	dbuser := os.Getenv("DBUSER")
+	connStr := fmt.Sprintf("user=%[1]v dbname=%[2]v  sslmode=disable", dbuser, dbname)
+	return connStr
 }
 
 // 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
