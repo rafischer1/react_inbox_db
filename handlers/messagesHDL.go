@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -11,8 +10,15 @@ import (
 )
 
 type Message struct {
-	id    int    `json:"id"`
-	title string `json:"title"`
+	ID        int      `json:"id"`
+	Read      bool     `json:"read"`
+	Starred   bool     `json:"starred"`
+	Selected  bool     `json:"selected"`
+	Subject   string   `sql:"type:varchar(255)"`
+	Body      string   `sql:"type:varchar(255)"`
+	Labels    []string `sql:",array"`
+	CreatedAt string   `json:"created_at"`
+	UpdatedAt string   `json:"updated_at"`
 }
 
 func GetAll(w http.ResponseWriter, req *http.Request) {
@@ -31,19 +37,19 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Printf("In the handler post rer", req, w)
 
-	var Message Message
-	MessageTitle := mux.Vars(req)["title"]
-	data := models.GetAllMessages()
+	// var Message Message
+	// MessageTitle := mux.Vars(req)["title"]
+	// data := models.GetAllMessages()
 
-	if MessageTitle == "" {
-		errors.New("user id cannot be empty.")
-	}
-	// this following line must be fixed: cannot assign int to id...
-	// Message.id, _ = strconv.ParseInt(req.FormValue("id"), 0, 32)
+	// if MessageTitle == "" {
+	// 	errors.New("user id cannot be empty.")
+	// }
+	// // this following line must be fixed: cannot assign int to id...
+	// // Message.id, _ = strconv.ParseInt(req.FormValue("id"), 0, 32)
 
-	Message.title = req.FormValue("title")
-	fmt.Println("req Message handler:", Message, data)
-	fmt.Fprint(w, "Content:", data)
+	// Message.title = req.FormValue("title")
+	// fmt.Println("req Message handler:", Message, data)
+	// fmt.Fprint(w, "Content: %v", data)
 }
 
 func EditMessage(w http.ResponseWriter, req *http.Request) {

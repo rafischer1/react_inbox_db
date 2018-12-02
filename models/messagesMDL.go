@@ -6,15 +6,20 @@ import (
 	"log"
 )
 
+// Message the psql table messages
 type Message struct {
-	id    uint   `json:"id"`
-	title string `json:"title"`
+	ID        int      `json:"id"`
+	Read      bool     `json:"read"`
+	Starred   bool     `json:"starred"`
+	Selected  bool     `json:"selected"`
+	Subject   string   `sql:"type:varchar(255)"`
+	Body      string   `json:"body"`
+	Labels    []string `sql:",array"`
+	CreatedAt string   `json:"created_at"`
+	UpdatedAt string   `json:"updated_at"`
 }
 
-/***********
-* Get All
-*
-*************/
+// GetAllMessages function
 func GetAllMessages() []Message {
 	connStr := "user=artiefischer dbname=reactinboxdb sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
@@ -29,21 +34,16 @@ func GetAllMessages() []Message {
 	var messages []Message
 	for rows.Next() {
 		message := Message{}
-		rows.Scan(&message.id, &message.title)
+		rows.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
 		messages = append(messages, message)
 	}
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
-
 	return messages
 }
 
-/***********
-* PostMessage
-*
-*************/
-
+// PostMessage function
 func PostMessage() []Message {
 
 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
@@ -72,11 +72,7 @@ func PostMessage() []Message {
 	return message
 }
 
-/***********
-* Edit
-*
-*************/
-
+// EditMessage function
 func EditMessage() []Message {
 	fmt.Println("In the model edit")
 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
@@ -90,7 +86,7 @@ func EditMessage() []Message {
 	var messages []Message
 	for rows.Next() {
 		message := Message{}
-		rows.Scan(&message.id, &message.title)
+		rows.Scan(&message.ID, &message.Subject)
 		messages = append(messages, message)
 	}
 	if err := rows.Err(); err != nil {
@@ -100,11 +96,7 @@ func EditMessage() []Message {
 	return messages
 }
 
-/***********
-* DELETE
-*
-*************/
-
+// DeleteMessage Model function
 func DeleteMessage() []Message {
 	var messages []Message
 	fmt.Println("In the model delete")

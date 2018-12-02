@@ -1,6 +1,6 @@
 # GO Backend for React-Inbox 🍽
 
-> CRUD routing for a RESTful API architecture in Go. PostgreSQL migrations and seeds managed with the Goose package import.
+> CRUD routing for a RESTful API architecture in Go. PostgreSQL migrations and seeds managed with the vanilla postgres commands.
 
 ```haskell
 CREATE TABLE messages (
@@ -8,14 +8,14 @@ CREATE TABLE messages (
  read boolean,
  starred boolean,
  selected boolean,
- subject VARCHAR (50) UNIQUE NOT NULL,
+ subject VARCHAR (255) UNIQUE NOT NULL,
  body VARCHAR (255) UNIQUE NOT NULL,
- labels VARCHAR (255) UNIQUE NOT NULL,
+ labels text[],
  created_at TIMESTAMP NOT NULL,
  updated_at TIMESTAMP NOT NULL
 );
 ```
 
-### routes
+## routes
 
   `/messages`
