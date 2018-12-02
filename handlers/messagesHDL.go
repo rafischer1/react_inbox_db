@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 
@@ -12,7 +11,7 @@ import (
 )
 
 type Message struct {
-	id    int64  `json:"id"`
+	id    int    `json:"id"`
 	title string `json:"title"`
 }
 
@@ -39,7 +38,9 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 	if MessageTitle == "" {
 		errors.New("user id cannot be empty.")
 	}
-	Message.id, _ = strconv.ParseInt(req.FormValue("id"), 0, 64)
+	// this following line must be fixed: cannot assign int to id...
+	// Message.id, _ = strconv.ParseInt(req.FormValue("id"), 0, 32)
+
 	Message.title = req.FormValue("title")
 	fmt.Println("req Message handler:", Message, data)
 	fmt.Fprint(w, "Content:", data)

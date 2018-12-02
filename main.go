@@ -14,8 +14,10 @@ import (
 	"github.com/rafischer1/react_inbox_db/handlers"
 )
 
+// db var is references the location of sql.DB
 var db *sql.DB
 
+// env variable declarations
 const (
 	dbhost = "DBHOST"
 	dbport = "DBPORT"
@@ -28,46 +30,49 @@ func main() {
 	initDb()
 	defer db.Close()
 	router := mux.NewRouter()
+
 	router.HandleFunc("/messages", handlers.GetAll).Methods("GET")
 	router.HandleFunc("/messages", handlers.PostMessage).Methods("POST")
 	router.HandleFunc("/messages/:id", handlers.EditMessage).Methods("PUT")
 	router.HandleFunc("/messages/:id", handlers.DeleteMessage).Methods("DELETE")
 
 	// set router
-	router.Handle("/", http.FileServer(http.Dir("./static/")))
-	// set listen port
-	err := http.ListenAndServe(":3000", nil)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
-	}
+	router.Handle("/", http.FileServer(http.Dir("static/")))
+
+	log.Println("Listening...")
+	http.ListenAndServe(":3003", router)
 }
 
 func initDb() {
-	// grab .env variables
+	// grab .env variables using gotenv package
 	gotenv.Load()
+
 	// call dbConfig function to set env variables
 	config := dbConfig()
 	var err error
+
 	// Loaded database info
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		config[dbhost], config[dbport],
 		config[dbuser], config[dbpass], config[dbname])
+
 	// print out database information for development
 	fmt.Println("db init info:", psqlInfo)
 
+	// open and run the db
 	db, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
 	}
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
+	// err = db.Ping()
+	// if err != nil {
+	// 	panic(err)
+	// }
 }
 
+// basic config setup and error handling for db env variables
 func dbConfig() map[string]string {
-
 	conf := make(map[string]string)
 	host, ok := os.LookupEnv(dbhost)
 	if !ok {
@@ -96,36 +101,3 @@ func dbConfig() map[string]string {
 	conf[dbname] = name
 	return conf
 }
-
-// type Specification struct {
-//     Debug       bool
-//     Port        int
-//     User        string
-//     Users       []string
-//     Rate        float32
-//     Timeout     time.Duration
-//     ColorCodes  map[string]int
-// }
-
-// func main() {
-//     var s Specification
-//     err := envconfig.Process("myapp", &s)
-//     if err != nil {
-//         log.Fatal(err.Error())
-//     }
-//     format := "Debug: %v\nPort: %d\nUser: %s\nRate: %f\nTimeout: %s\n"
-//     _, err = fmt.Printf(format, s.Debug, s.Port, s.User, s.Rate, s.Timeout)
-//     if err != nil {
-//         log.Fatal(err.Error())
-//     }
-
-//     fmt.Println("Users:")
-//     for _, u := range s.Users {
-//         fmt.Printf("  %s\n", u)
-//     }
-
-//     fmt.Println("Color codes:")
-//     for k, v := range s.ColorCodes {
-//         fmt.Printf("  %s: %d\n", k, v)
-//     }
-// }
