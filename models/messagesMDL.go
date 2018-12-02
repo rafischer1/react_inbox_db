@@ -16,7 +16,7 @@ type Message struct {
 	Read      bool     `json:"read"`
 	Starred   bool     `json:"starred"`
 	Selected  bool     `json:"selected"`
-	Subject   string   `sql:"type:varchar(255)"`
+	Subject   string   `json:"subject"`
 	Body      string   `sql:"type:varchar(255)"`
 	Labels    []string `sql:",array"`
 	CreatedAt string   `json:"created_at"`

@@ -1,11 +1,11 @@
 CREATE TABLE messages (
- id serial PRIMARY KEY,
- read boolean,
- starred boolean,
- selected boolean,
- subject VARCHAR (255) UNIQUE NOT NULL,
- body VARCHAR (255) UNIQUE NOT NULL,
- labels text[],
- created_at TIMESTAMP NOT NULL,
- updated_at TIMESTAMP NOT NULL
+ ID serial PRIMARY KEY,
+ Read boolean,
+ Starred boolean,
+ Selected boolean,
+ Subject text UNIQUE NOT NULL,
+ Body text UNIQUE NOT NULL,
+ Labels text[],
+ CreatedAt TIMESTAMP NOT NULL,
+ UpdatedAt TIMESTAMP NOT NULL
 );
