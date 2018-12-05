@@ -70,8 +70,10 @@
       
     })
     const getAllMessages = async () => {
-        let response = await fetch('http://localhost:3003/messages')
-        console.log("response status:", response.status , "\nresponse:", response)
+        let response = await fetch
+        ('http://localhost:3003/messages')
+        let responseTwo = await response.json()
+        console.log("html response:", response.status , "\nresponse:", responseTwo)
       }
   </script>
 </body>

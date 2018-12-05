@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-
 	"os"
 
 	"github.com/subosito/gotenv"
@@ -12,39 +11,50 @@ import (
 
 // Message the psql table messages
 type Message struct {
-	ID        int      `json:"id"`
+	ID        int64    `json:"id"`
 	Read      bool     `json:"read"`
 	Starred   bool     `json:"starred"`
 	Selected  bool     `json:"selected"`
 	Subject   string   `json:"subject"`
-	Body      string   `sql:"type:varchar(255)"`
-	Labels    []string `sql:",array"`
-	CreatedAt string   `json:"created_at"`
-	UpdatedAt string   `json:"updated_at"`
+	Body      string   `json:"body"`
+	Labels    []string `json:"labels"`
+	CreatedAt string   `json:"createdat"`
+	UpdatedAt string   `json:"updatedat"`
 }
 
 // GetAllMessages function
 func GetAllMessages() []Message {
 	connStr := dbInit()
-	fmt.Println("connStr:", connStr)
+	fmt.Println("connection string:", connStr)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("db:%v", db)
 	defer db.Close()
 
+	fmt.Println("db Query:", "Select * from messages")
 	rows, err := db.Query("SELECT * FROM messages")
 
-	defer rows.Close()
+	// defer rows.Close()
+
 	var messages []Message
 	for rows.Next() {
+		var ID int
+		var Read bool
+		var Starred bool
+
 		message := Message{}
-		rows.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
+		fmt.Println("message:", message)
+		rows.Scan(&ID, &Read, &Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
 		messages = append(messages, message)
+
 	}
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("messages:", messages)
 	return messages
 }
 
@@ -120,8 +130,11 @@ func dbInit() string {
 	gotenv.Load()
 	dbname := os.Getenv("DBNAME")
 	dbuser := os.Getenv("DBUSER")
-	connStr := fmt.Sprintf("user=%[1]v dbname=%[2]v  sslmode=disable", dbuser, dbname)
+	connStr := fmt.Sprintf("user=%[1]v "+
+		"dbname=%[2]v sslmode=disable", dbuser, dbname)
+
 	return connStr
+
 }
 
 // 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")

@@ -20,7 +20,13 @@ CREATE TABLE messages (
 
   `/messages`
 
-  
+### database creation with *Goose*
+
+`goose create messages`
+
+`goose up` / `goose down` / `goose redo`
+
+
 
 
 

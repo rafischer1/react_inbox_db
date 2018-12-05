@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -10,27 +11,27 @@ import (
 )
 
 type Message struct {
-	ID        int      `json:"id"`
-	Read      bool     `json:"read"`
-	Starred   bool     `json:"starred"`
-	Selected  bool     `json:"selected"`
-	Subject   string   `sql:"type:varchar(255)"`
-	Body      string   `sql:"type:varchar(255)"`
+	ID        int      `json:"ID"`
+	Read      bool     `json:"Read"`
+	Starred   bool     `json:"Starred"`
+	Selected  bool     `json:"Selected"`
+	Subject   string   `json:"Subject"`
+	Body      string   `json:"Body"`
 	Labels    []string `sql:",array"`
-	CreatedAt string   `json:"created_at"`
-	UpdatedAt string   `json:"updated_at"`
+	CreatedAt string   `json:"CreatedAt"`
+	UpdatedAt string   `json:"UpdatedAt"`
 }
 
 func GetAll(w http.ResponseWriter, req *http.Request) {
-
 	data := models.GetAllMessages()
+	json.Marshal(data)
 	vars := mux.Vars(req)
 
 	//return the data
 	fmt.Printf("d: %+v", data)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(vars["Content"]))
-	fmt.Fprintf(w, "Content:%s", vars["Content"], data)
+	w.Write([]byte(vars["data"]))
+	fmt.Fprintf(w, "data:%s", vars["data"], &data)
 }
 
 //Rest of REST routes
