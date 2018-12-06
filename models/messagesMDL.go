@@ -51,7 +51,7 @@ func GetAllMessages() []Message {
 	return messages
 }
 
-// GetOneMessage is the second step of CRUD
+// GetOneMessage Selects by ID fom db
 func GetOneMessage(id string) []Message {
 	fmt.Println("In the get one model", id)
 	connStr := dbInit()
@@ -73,7 +73,6 @@ func GetOneMessage(id string) []Message {
 	if err := row.Err(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("get one data model:", entry)
 	return entry
 }
 
@@ -133,16 +132,28 @@ func EditMessage() []Message {
 }
 
 // DeleteMessage Model function
-func DeleteMessage() []Message {
-	var messages []Message
-
+func DeleteMessage(id string) []Message {
+	fmt.Println("In the delete model", id)
 	connStr := dbInit()
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("In the model delete", db)
-	return messages
+	defer db.Close()
+	fmt.Println("id:", id)
+	row, err := db.Query(`Delete FROM messages where id =` + id)
+
+	var entry []Message
+	for row.Next() {
+		message := Message{}
+		// gotta get all the fields!
+		row.Scan(&message.id, &message.read, &message.starred, &message.selected, &message.subject, &message.body, &message.labels, &message.createdAt, &message.updatedAt)
+		entry = append(entry, message)
+	}
+	if err := row.Err(); err != nil {
+		log.Fatal(err)
+	}
+	return entry
 }
 
 // initialize connection string for db using.env

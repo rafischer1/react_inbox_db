@@ -76,8 +76,10 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 // DeleteMessage sends the delete request to the db
 func DeleteMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler delete")
+	reqID := req.URL.String()
+	id := strings.Split(reqID, "/")[2]
 
-	data := models.DeleteMessage()
+	data := models.DeleteMessage(id)
 	vars := mux.Vars(req)
-	fmt.Fprint(w, "Content:", vars["Content"], data)
+	fmt.Fprint(w, "Deleted Entry:", vars["Deleted Entry"], data, id)
 }
