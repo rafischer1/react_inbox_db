@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 
@@ -27,8 +28,12 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 
 // GetOne handler to handle one record
 func GetOne(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("In the getOne handler:", req)
-	id := req.FormValue("id")
+
+	reqID := req.URL.String()
+	id := strings.Split(reqID, "/")[2]
+
+	fmt.Println("In req.URL.String() id:", id)
+
 	data := models.GetOneMessage(id)
 	json.Marshal(data)
 	vars := mux.Vars(req)
@@ -59,6 +64,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, "Content: %v", data)
 }
 
+// EditMessage handler calls on the model to handle a PUT
 func EditMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler edit")
 
@@ -67,6 +73,7 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, "Content:", vars["Content"], data)
 }
 
+// DeleteMessage sends the delete request to the db
 func DeleteMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler delete")
 

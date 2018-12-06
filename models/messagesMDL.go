@@ -55,18 +55,26 @@ func GetAllMessages() []Message {
 func GetOneMessage(id string) []Message {
 	fmt.Println("In the get one model", id)
 	connStr := dbInit()
-	fmt.Println("connection string:", connStr)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("db:%v", db)
 	defer db.Close()
+	fmt.Println("id:", id)
+	row, err := db.Query(`SELECT * FROM messages where id =` + id)
 
-	rows, err := db.Query(`SELECT * FROM messages where id = ` + id)
-	fmt.Println(rows)
-	var message []Message
-	return message
+	var entry []Message
+	for row.Next() {
+		message := Message{}
+		// gotta get all the fields!
+		row.Scan(&message.id, &message.read, &message.starred, &message.selected, &message.subject, &message.body, &message.labels, &message.createdAt, &message.updatedAt)
+		entry = append(entry, message)
+	}
+	if err := row.Err(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("get one data model:", entry)
+	return entry
 }
 
 // PostMessage function
@@ -144,9 +152,18 @@ func dbInit() string {
 	dbuser := os.Getenv("DBUSER")
 	connStr := fmt.Sprintf("user=%[1]v "+
 		"dbname=%[2]v sslmode=disable", dbuser, dbname)
-
 	return connStr
+}
 
+func dbOpen() {
+	connStr := dbInit()
+	fmt.Println("connection string:", connStr)
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("db:%v", db)
+	defer db.Close()
 }
 
 // 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
