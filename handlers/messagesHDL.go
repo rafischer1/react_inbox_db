@@ -47,19 +47,14 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
-	fmt.Printf("In the handler post rer", req, w)
-	data := models.GetAllMessages()
+	fmt.Println("In the handler post req.Body:", req.Body)
+	// gotta find the actual request body
+	// how is this done in express?
+	bodyData := req.Body
+
+	data := models.PostMessage(bodyData)
+
 	Message := &models.Message{}
-
-	// MessageSubject := mux.Vars(req)["subject"]
-
-	// if MessageTitle == "" {
-	// 	errors.New("user id cannot be empty.")
-	// }
-	// this following line must be fixed: cannot assign int to id...
-	// Message.id, _ = strconv.ParseInt(req.FormValue("id"), 0, 32)
-
-	// Message.subject = req.FormValue("subject")
 	fmt.Println("req Message handler:", Message, data)
 	fmt.Fprint(w, "Content: %v", data)
 }

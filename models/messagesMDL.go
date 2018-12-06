@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -74,7 +75,8 @@ func GetOneMessage(id string) []Message {
 }
 
 // PostMessage function
-func PostMessage() []Message {
+func PostMessage(req io.ReadCloser) []Message {
+	fmt.Println("in pOSTmessages:", req)
 	connStr := dbInit()
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -82,23 +84,10 @@ func PostMessage() []Message {
 	}
 	var message []Message
 	rows, err := db.Query(
-		"INSERT INTO messages (title) VALUES ($1)",
+		`INSERT INTO messages(ID, Read, Starred, Selected, Subject, Body, Labels, CreatedAt, UpdatedAt) VALUES`,
 		message,
 	)
 	defer rows.Close()
-
-	// fmt.Println("In the model", message)
-	// defer rows.Close()
-	// var messages []Message
-	// for rows.Next() {
-	//   message := Message{}
-	//   rows.Scan(&message.id, &message.title)
-	//   messages = append(messages, message)
-	// }
-	// if err := rows.Err(); err != nil {
-	//   log.Fatal(err)
-	// }
-
 	return message
 }
 

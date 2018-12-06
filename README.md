@@ -18,9 +18,11 @@ CREATE TABLE messages (
 
 ## routes
 
-  `/messages`
+  `/messages/{id}`
 
-### database creation with *Goose*
+* mock post request: read=true starred=false selected=false subject="Test Entry" body="Test Entry Body" labels="{"personal", "dev"}"
+
+## database creation with *Goose*
 
 [Goose 💸](https://github.com/pressly/goose)
 
