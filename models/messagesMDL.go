@@ -11,29 +11,26 @@ import (
 
 // Message the psql table messages
 type Message struct {
-	id        int64  `json:"id"`
-	read      bool   `json:"read"`
-	starred   bool   `json:"starred"`
-	selected  bool   `json:"selected"`
-	subject   string `json:"subject"`
-	body      string `json:"body"`
-	labels    string `json:"labels"`
-	createdAt string `json:"createdAt"`
-	updatedAt string `json:"updatedAt"`
+	ID        int64  `json:"id"`
+	Read      bool   `json:"read"`
+	Starred   bool   `json:"starred"`
+	Selected  bool   `json:"selected"`
+	Subject   string `json:"subject"`
+	Body      string `json:"body"`
+	Labels    string `json:"labels"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
 }
 
 // GetAllMessages function
 func GetAllMessages() []Message {
 	connStr := dbInit()
-	fmt.Println("connection string:", connStr)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("db:%v", db)
 	defer db.Close()
-
-	fmt.Println("db Query:", "Select * from messages")
 	rows, err := db.Query("SELECT * FROM messages")
 
 	defer rows.Close()
@@ -42,7 +39,7 @@ func GetAllMessages() []Message {
 	for rows.Next() {
 		message := Message{}
 		// gotta get all the fields!
-		rows.Scan(&message.id, &message.read, &message.starred, &message.selected, &message.subject, &message.body, &message.labels, &message.createdAt, &message.updatedAt)
+		rows.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
 		messages = append(messages, message)
 	}
 	if err := rows.Err(); err != nil {
@@ -60,14 +57,14 @@ func GetOneMessage(id string) []Message {
 		panic(err)
 	}
 	defer db.Close()
-	fmt.Println("id:", id)
+
 	row, err := db.Query(`SELECT * FROM messages where id =` + id)
 
 	var entry []Message
 	for row.Next() {
 		message := Message{}
 		// gotta get all the fields!
-		row.Scan(&message.id, &message.read, &message.starred, &message.selected, &message.subject, &message.body, &message.labels, &message.createdAt, &message.updatedAt)
+		row.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
 		entry = append(entry, message)
 	}
 	if err := row.Err(); err != nil {
@@ -120,7 +117,7 @@ func EditMessage() []Message {
 	var messages []Message
 	for rows.Next() {
 		message := Message{}
-		rows.Scan(&message.id, &message.subject)
+		rows.Scan(&message.ID, &message.Subject)
 		messages = append(messages, message)
 	}
 	if err := rows.Err(); err != nil {
@@ -132,7 +129,7 @@ func EditMessage() []Message {
 }
 
 // DeleteMessage Model function
-func DeleteMessage(id string) []Message {
+func DeleteMessage(id string) string {
 	fmt.Println("In the delete model", id)
 	connStr := dbInit()
 	db, err := sql.Open("postgres", connStr)
@@ -140,23 +137,17 @@ func DeleteMessage(id string) []Message {
 		panic(err)
 	}
 	defer db.Close()
-	fmt.Println("id:", id)
 	row, err := db.Query(`Delete FROM messages where id =` + id)
-
-	var entry []Message
-	for row.Next() {
-		message := Message{}
-		// gotta get all the fields!
-		row.Scan(&message.id, &message.read, &message.starred, &message.selected, &message.subject, &message.body, &message.labels, &message.createdAt, &message.updatedAt)
-		entry = append(entry, message)
-	}
 	if err := row.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return entry
+	return id
 }
 
-// initialize connection string for db using.env
+/************
+*  initialize connection string
+*  for db using .env
+**************/
 func dbInit() string {
 	gotenv.Load()
 	dbname := os.Getenv("DBNAME")
@@ -165,35 +156,3 @@ func dbInit() string {
 		"dbname=%[2]v sslmode=disable", dbuser, dbname)
 	return connStr
 }
-
-func dbOpen() {
-	connStr := dbInit()
-	fmt.Println("connection string:", connStr)
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("db:%v", db)
-	defer db.Close()
-}
-
-// 	db, err := sql.Open("postgres", "user=artiefischer dbname=reactinboxdb sslmode=disable")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	rows, err := db.Query("SELECT * FROM messages")
-
-// 	defer rows.Close()
-// 	var messages []Message
-// 	for rows.Next() {
-// 		message := Message{}
-// 		rows.Scan(&Message.id, &Message.title)
-// 		messages = append(messages, Message)
-// 	}
-// 	if err := rows.Err(); err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	return messages
-// }
