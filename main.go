@@ -37,6 +37,12 @@ func main() {
 	r.HandleFunc("/messages/{id}", handlers.EditMessage).Methods("PUT")
 	r.HandleFunc("/messages/{id}", handlers.DeleteMessage).Methods("DELETE")
 
+	r.HandleFunc("/files", handlers.GetAllFiles).Methods("GET")
+	r.HandleFunc("/files/{id}", handlers.GetOneFile).Methods("GET")
+	r.HandleFunc("/files", handlers.PostFile).Methods("POST")
+	r.HandleFunc("/files/{id}", handlers.EditFile).Methods("PUT")
+	r.HandleFunc("/files/{id}", handlers.DeleteFile).Methods("DELETE")
+
 	// set router
 	r.Handle("/", http.FileServer(http.Dir("static/")))
 

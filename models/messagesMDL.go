@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
-	"github.com/subosito/gotenv"
+	d "github.com/rafischer1/react_inbox_db/db"
 )
+
+// initialize the db connection
 
 // Message the psql table messages
 type Message struct {
@@ -25,8 +26,7 @@ type Message struct {
 
 // GetAllMessages function
 func GetAllMessages() []Message {
-	connStr := dbInit()
-	db, err := sql.Open("postgres", connStr)
+	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
@@ -52,8 +52,8 @@ func GetAllMessages() []Message {
 // GetOneMessage Selects by ID fom db
 func GetOneMessage(id string) []Message {
 	fmt.Println("In the get one model", id)
-	connStr := dbInit()
-	db, err := sql.Open("postgres", connStr)
+
+	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
@@ -77,8 +77,8 @@ func GetOneMessage(id string) []Message {
 // PostMessage function
 func PostMessage(body Message) []Message {
 	fmt.Println("in POSTmessages:", body)
-	connStr := dbInit()
-	db, err := sql.Open("postgres", connStr)
+
+	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
@@ -94,8 +94,8 @@ func PostMessage(body Message) []Message {
 // EditMessage function
 func EditMessage() []Message {
 	fmt.Println("In the model edit")
-	connStr := dbInit()
-	db, err := sql.Open("postgres", connStr)
+
+	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
@@ -120,8 +120,8 @@ func EditMessage() []Message {
 // DeleteMessage Model function
 func DeleteMessage(id string) string {
 	fmt.Println("In the delete model", id)
-	connStr := dbInit()
-	db, err := sql.Open("postgres", connStr)
+
+	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
@@ -131,17 +131,4 @@ func DeleteMessage(id string) string {
 		log.Fatal(err)
 	}
 	return id
-}
-
-/************
-*  initialize connection string
-*  for db using .env
-**************/
-func dbInit() string {
-	gotenv.Load()
-	dbname := os.Getenv("DBNAME")
-	dbuser := os.Getenv("DBUSER")
-	connStr := fmt.Sprintf("user=%[1]v "+
-		"dbname=%[2]v sslmode=disable", dbuser, dbname)
-	return connStr
 }
