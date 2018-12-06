@@ -79,12 +79,12 @@ func EditFile(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, "Content:", vars["Content"], data)
 }
 
-// DeleteMessage sends the delete request to the db
+// DeleteFile sends the delete request to the db
 func DeleteFile(w http.ResponseWriter, req *http.Request) {
 	reqID := req.URL.String()
 	id := strings.Split(reqID, "/")[2]
 	data := models.DeleteFileMDL(id)
 	vars := mux.Vars(req)
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "Deleted File:", vars["Deleted File"], data, id)
+	fmt.Fprint(w, "Deleted File:", vars["Deleted File"], data)
 }

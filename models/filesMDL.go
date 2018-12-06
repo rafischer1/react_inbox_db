@@ -43,7 +43,7 @@ func GetAllFilesMDL() []File {
 }
 
 // GetOneMessage Selects by ID fom db
-func GetOneFileMDL(id string) []Message {
+func GetOneFileMDL(id string) File {
 	fmt.Println("In the get one model", id)
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
@@ -51,22 +51,22 @@ func GetOneFileMDL(id string) []Message {
 	}
 	defer db.Close()
 
-	row, err := db.Query(`SELECT * FROM messages where id =` + id)
+	row, err := db.Query(`SELECT * FROM files where id =` + id)
 
-	var entry []Message
+	var entry []File
 	for row.Next() {
-		message := Message{}
+		file := File{}
 		// gotta get all the fields!
-		row.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
-		entry = append(entry, message)
+		row.Scan(&file.ID, &file.CoolNotCool, &file.Body)
+		entry = append(entry, file)
 	}
 	if err := row.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return entry
+	return entry[0]
 }
 
-// PostMessage function
+// PostFileMDL function
 func PostFileMDL(body File) []File {
 	fmt.Println("in POSTmessages:", body)
 	db, err := sql.Open("postgres", d.ConnStr)
