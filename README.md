@@ -16,7 +16,9 @@ CREATE TABLE messages (
 );
 ```
 
-## routes
+## routes 🚍
+
+  `/files/{id}`
 
   `/messages/{id}`
 
