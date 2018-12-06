@@ -20,7 +20,7 @@ CREATE TABLE messages (
 
   `/messages/{id}`
 
-* mock post request: read=true starred=false selected=false subject="Test Entry" body="Test Entry Body" labels="{"personal", "dev"}"
+* mock post request: http POST :3003/messages read=true starred=false selected=false subject='Subject Entry' body='Body Entry' labels='{"personal", "dev"}'
 
 ## database creation with *Goose*
 

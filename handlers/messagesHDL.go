@@ -48,14 +48,16 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler post req.Body:", req.Body)
-	// gotta find the actual request body
-	// how is this done in express?
-	bodyData := req.Body
+	body := models.Message{}
+	json.NewDecoder(req.Body).Decode(&body)
+	fmt.Println("decoder json:", body)
 
-	data := models.PostMessage(bodyData)
+	data := models.PostMessage(body)
 
 	Message := &models.Message{}
 	fmt.Println("req Message handler:", Message, data)
+	w.WriteHeader(http.StatusOK)
+
 	fmt.Fprint(w, "Content: %v", data)
 }
 
@@ -65,6 +67,7 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 
 	data := models.EditMessage()
 	vars := mux.Vars(req)
+	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "Content:", vars["Content"], data)
 }
 
@@ -74,5 +77,6 @@ func DeleteMessage(w http.ResponseWriter, req *http.Request) {
 	id := strings.Split(reqID, "/")[2]
 	data := models.DeleteMessage(id)
 	vars := mux.Vars(req)
+	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "Deleted Entry:", vars["Deleted Entry"], data, id)
 }
