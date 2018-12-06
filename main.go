@@ -29,18 +29,19 @@ const (
 func main() {
 	initDb()
 	defer db.Close()
-	router := mux.NewRouter()
+	r := mux.NewRouter()
 
-	router.HandleFunc("/messages", handlers.GetAll).Methods("GET")
-	router.HandleFunc("/messages", handlers.PostMessage).Methods("POST")
-	router.HandleFunc("/messages/:id", handlers.EditMessage).Methods("PUT")
-	router.HandleFunc("/messages/:id", handlers.DeleteMessage).Methods("DELETE")
+	r.HandleFunc("/messages", handlers.GetAll).Methods("GET")
+	r.HandleFunc("/messages/{id}", handlers.GetOne).Methods("GET")
+	r.HandleFunc("/messages", handlers.PostMessage).Methods("POST")
+	r.HandleFunc("/messages/{id}", handlers.EditMessage).Methods("PUT")
+	r.HandleFunc("/messages/{id}", handlers.DeleteMessage).Methods("DELETE")
 
 	// set router
-	router.Handle("/", http.FileServer(http.Dir("static/")))
+	r.Handle("/", http.FileServer(http.Dir("static/")))
 
 	log.Println("Listening...")
-	http.ListenAndServe(":3003", router)
+	http.ListenAndServe(":3003", r)
 }
 
 func initDb() {

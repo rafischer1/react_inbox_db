@@ -10,21 +10,26 @@ import (
 	"github.com/rafischer1/react_inbox_db/models"
 )
 
-// Message struct for db query
-type Message struct {
-	id        int64  `json:"id"`
-	read      bool   `json:"read"`
-	starred   bool   `json:"starred"`
-	selected  bool   `json:"selected"`
-	subject   string `json:"subject"`
-	body      string `json:"body"`
-	labels    string `json:"labels"`
-	createdAt string `json:"createdAt"`
-	updatedAt string `json:"updatedAt"`
+// GetAll handler to handle all records
+func GetAll(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("in the getall handler", req)
+	data := models.GetAllMessages()
+	json.Marshal(data)
+	vars := mux.Vars(req)
+
+	//return the data
+	fmt.Printf("d: %+v", data)
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(vars["data"]))
+	fmt.Fprintf(w, "data:%s", vars["data"], data)
+
 }
 
-func GetAll(w http.ResponseWriter, req *http.Request) {
-	data := models.GetAllMessages()
+// GetOne handler to handle one record
+func GetOne(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("In the getOne handler:", req)
+	id := req.FormValue("id")
+	data := models.GetOneMessage(id)
 	json.Marshal(data)
 	vars := mux.Vars(req)
 
@@ -38,20 +43,20 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Printf("In the handler post rer", req, w)
+	data := models.GetAllMessages()
+	Message := &models.Message{}
 
-	// var Message Message
-	// MessageTitle := mux.Vars(req)["title"]
-	// data := models.GetAllMessages()
+	// MessageSubject := mux.Vars(req)["subject"]
 
 	// if MessageTitle == "" {
 	// 	errors.New("user id cannot be empty.")
 	// }
-	// // this following line must be fixed: cannot assign int to id...
-	// // Message.id, _ = strconv.ParseInt(req.FormValue("id"), 0, 32)
+	// this following line must be fixed: cannot assign int to id...
+	// Message.id, _ = strconv.ParseInt(req.FormValue("id"), 0, 32)
 
-	// Message.title = req.FormValue("title")
-	// fmt.Println("req Message handler:", Message, data)
-	// fmt.Fprint(w, "Content: %v", data)
+	// Message.subject = req.FormValue("subject")
+	fmt.Println("req Message handler:", Message, data)
+	fmt.Fprint(w, "Content: %v", data)
 }
 
 func EditMessage(w http.ResponseWriter, req *http.Request) {

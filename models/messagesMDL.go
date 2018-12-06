@@ -44,14 +44,29 @@ func GetAllMessages() []Message {
 		// gotta get all the fields!
 		rows.Scan(&message.id, &message.read, &message.starred, &message.selected, &message.subject, &message.body, &message.labels, &message.createdAt, &message.updatedAt)
 		messages = append(messages, message)
-
 	}
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("messages:", messages)
 	return messages
+}
+
+// GetOneMessage is the second step of CRUD
+func GetOneMessage(id string) []Message {
+	fmt.Println("In the get one model", id)
+	connStr := dbInit()
+	fmt.Println("connection string:", connStr)
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("db:%v", db)
+	defer db.Close()
+
+	rows, err := db.Query(`SELECT * FROM messages where id = ` + id)
+	fmt.Println(rows)
+	var message []Message
+	return message
 }
 
 // PostMessage function
