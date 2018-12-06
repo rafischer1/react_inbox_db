@@ -5,21 +5,22 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/subosito/gotenv"
 )
 
 // Message the psql table messages
 type Message struct {
-	ID        int64  `json:"id"`
-	Read      bool   `json:"read"`
-	Starred   bool   `json:"starred"`
-	Selected  bool   `json:"selected"`
-	Subject   string `json:"subject"`
-	Body      string `json:"body"`
-	Labels    string `json:"labels"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	ID        int64     `json:"id"`
+	Read      bool      `json:"read"`
+	Starred   bool      `json:"starred"`
+	Selected  bool      `json:"selected"`
+	Subject   string    `json:"subject"`
+	Body      string    `json:"body"`
+	Labels    string    `json:"labels"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 // GetAllMessages function

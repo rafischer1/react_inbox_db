@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 
@@ -15,14 +16,16 @@ import (
 func GetAll(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("in the getall handler", req)
 	data := models.GetAllMessages()
-	json.Marshal(data)
-	vars := mux.Vars(req)
 
 	//return the data
 	fmt.Printf("d: %+v", data)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(vars["data"]))
-	fmt.Fprintf(w, "data:%s", vars["data"], data)
+	w.Header().Set("Content-Type", "application/json")
+	resData, err := json.Marshal(data)
+	if err != nil {
+		panic(err)
+	}
+	w.Write(resData)
 
 }
 
@@ -36,21 +39,29 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 	data := models.GetOneMessage(id)
 	json.Marshal(data)
-	vars := mux.Vars(req)
 
 	//return the data
 	fmt.Printf("d: %+v", data)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(vars["data"]))
-	fmt.Fprintf(w, "data:%s", vars["data"], data)
+	w.Header().Set("Content-Type", "application/json")
+	resData, err := json.Marshal(data)
+	if err != nil {
+		panic(err)
+	}
+	w.Write(resData)
 }
 
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler post req.Body:", req.Body)
 	body := models.Message{}
+
 	json.NewDecoder(req.Body).Decode(&body)
 	fmt.Println("decoder json:", body)
+
+	// gonna need to parse these to look like this: 2018-12-06 11:35:13
+	body.CreatedAt = time.Now().Local()
+	body.UpdatedAt = time.Now().Local()
 
 	data := models.PostMessage(body)
 
