@@ -22,14 +22,8 @@ CREATE TABLE messages (
 
 ### database creation with *Goose*
 
+[Goose 💸](https://github.com/pressly/goose)
+
 `goose create messages`
 
 `goose up` / `goose down` / `goose redo`
-
-
-
-
-
-
-
-

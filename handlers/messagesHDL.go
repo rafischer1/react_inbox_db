@@ -10,16 +10,17 @@ import (
 	"github.com/rafischer1/react_inbox_db/models"
 )
 
+// Message struct for db query
 type Message struct {
-	ID        int      `json:"ID"`
-	Read      bool     `json:"Read"`
-	Starred   bool     `json:"Starred"`
-	Selected  bool     `json:"Selected"`
-	Subject   string   `json:"Subject"`
-	Body      string   `json:"Body"`
-	Labels    []string `sql:",array"`
-	CreatedAt string   `json:"CreatedAt"`
-	UpdatedAt string   `json:"UpdatedAt"`
+	id        int64  `json:"id"`
+	read      bool   `json:"read"`
+	starred   bool   `json:"starred"`
+	selected  bool   `json:"selected"`
+	subject   string `json:"subject"`
+	body      string `json:"body"`
+	labels    string `json:"labels"`
+	createdAt string `json:"createdAt"`
+	updatedAt string `json:"updatedAt"`
 }
 
 func GetAll(w http.ResponseWriter, req *http.Request) {
@@ -31,10 +32,10 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 	fmt.Printf("d: %+v", data)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(vars["data"]))
-	fmt.Fprintf(w, "data:%s", vars["data"], &data)
+	fmt.Fprintf(w, "data:%s", vars["data"], data)
 }
 
-//Rest of REST routes
+// PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Printf("In the handler post rer", req, w)
 

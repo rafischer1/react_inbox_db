@@ -4,8 +4,8 @@ CREATE TABLE messages (
  read boolean,
  starred boolean,
  selected boolean,
- subject VARCHAR (255) UNIQUE NOT NULL,
- body VARCHAR (255) UNIQUE NOT NULL,
+ subject text UNIQUE NOT NULL,
+ body text UNIQUE NOT NULL,
  labels text,
  createdAt TIMESTAMP NOT NULL,
  updatedAt TIMESTAMP NOT NULL

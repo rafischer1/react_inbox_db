@@ -11,15 +11,15 @@ import (
 
 // Message the psql table messages
 type Message struct {
-	ID        int64    `json:"id"`
-	Read      bool     `json:"read"`
-	Starred   bool     `json:"starred"`
-	Selected  bool     `json:"selected"`
-	Subject   string   `json:"subject"`
-	Body      string   `json:"body"`
-	Labels    []string `json:"labels"`
-	CreatedAt string   `json:"createdat"`
-	UpdatedAt string   `json:"updatedat"`
+	id        int64  `json:"id"`
+	read      bool   `json:"read"`
+	starred   bool   `json:"starred"`
+	selected  bool   `json:"selected"`
+	subject   string `json:"subject"`
+	body      string `json:"body"`
+	labels    string `json:"labels"`
+	createdAt string `json:"createdAt"`
+	updatedAt string `json:"updatedAt"`
 }
 
 // GetAllMessages function
@@ -36,17 +36,13 @@ func GetAllMessages() []Message {
 	fmt.Println("db Query:", "Select * from messages")
 	rows, err := db.Query("SELECT * FROM messages")
 
-	// defer rows.Close()
+	defer rows.Close()
 
 	var messages []Message
 	for rows.Next() {
-		var ID int
-		var Read bool
-		var Starred bool
-
 		message := Message{}
-		fmt.Println("message:", message)
-		rows.Scan(&ID, &Read, &Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
+		// gotta get all the fields!
+		rows.Scan(&message.id, &message.read, &message.starred, &message.selected, &message.subject, &message.body, &message.labels, &message.createdAt, &message.updatedAt)
 		messages = append(messages, message)
 
 	}
@@ -102,7 +98,7 @@ func EditMessage() []Message {
 	var messages []Message
 	for rows.Next() {
 		message := Message{}
-		rows.Scan(&message.ID, &message.Subject)
+		rows.Scan(&message.id, &message.subject)
 		messages = append(messages, message)
 	}
 	if err := rows.Err(); err != nil {
@@ -110,6 +106,7 @@ func EditMessage() []Message {
 	}
 
 	return messages
+
 }
 
 // DeleteMessage Model function
