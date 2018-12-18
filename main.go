@@ -14,7 +14,7 @@ import (
 	"github.com/rafischer1/react_inbox_db/handlers"
 )
 
-// db var is references the location of sql.DB
+// db var references sql.DB
 var db *sql.DB
 
 // env variable declarations
@@ -43,10 +43,11 @@ func main() {
 	r.HandleFunc("/files/{id}", handlers.EditFile).Methods("PUT")
 	r.HandleFunc("/files/{id}", handlers.DeleteFile).Methods("DELETE")
 
-	// set router
+	// serve static files
 	r.Handle("/", http.FileServer(http.Dir("static/")))
 
-	log.Println("Listening...")
+	// set router
+	log.Println("Listening...3003")
 	http.ListenAndServe(":3003", r)
 }
 
@@ -82,17 +83,17 @@ func initDb() {
 func dbConfig() map[string]string {
 	conf := make(map[string]string)
 	host, ok := os.LookupEnv(dbhost)
-	fmt.Println("host:", host)
+	// fmt.Println("host:", host)
 	if !ok {
 		panic("DBHOST environment variable required but not set")
 	}
 	port, ok := os.LookupEnv(dbport)
-	fmt.Println("port:", port)
+	// fmt.Println("port:", port)
 	if !ok {
 		panic("DBPORT environment variable required but not set")
 	}
 	user, ok := os.LookupEnv(dbuser)
-	fmt.Println("user:", user)
+	// fmt.Println("user:", user)
 	if !ok {
 		panic("DBUSER environment variable required but not set")
 	}
@@ -101,7 +102,7 @@ func dbConfig() map[string]string {
 		panic("DBPASS environment variable required but not set")
 	}
 	name, ok := os.LookupEnv(dbname)
-	fmt.Println("dbname:", name)
+	// fmt.Println("dbname:", name)
 	if !ok {
 		panic("DBNAME environment variable required but not set")
 	}

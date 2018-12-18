@@ -14,7 +14,7 @@ import (
 
 // GetAll handler to handle all records
 func GetAll(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("in the getall handler", req)
+	// fmt.Println("in the getall handler", req)
 	data := models.GetAllMessages()
 
 	//return the data

@@ -9,14 +9,19 @@ import (
 )
 
 // File the psql table files
+type FileWithId struct {
+	*File
+	ID int `json:"id"`
+}
+
+// File is cool
 type File struct {
-	ID          int64  `json:"id"`
-	CoolNotCool bool   `json:"coolNotCot"`
+	CoolNotCool bool   `json:"coolNotCool"`
 	Body        string `json:"body"`
 }
 
 // GetAllFilesMDL function
-func GetAllFilesMDL() []File {
+func GetAllFilesMDL() []FileWithId {
 	db, err := sql.Open("postgres", d.ConnStr)
 	fmt.Println("connstr:", d.ConnStr)
 	if err != nil {
@@ -28,9 +33,9 @@ func GetAllFilesMDL() []File {
 	fmt.Printf("rows:%+v", rows)
 	defer rows.Close()
 
-	var files []File
+	var files []FileWithId
 	for rows.Next() {
-		file := File{}
+		file := FileWithId{}
 		// gotta get all the fields!
 		rows.Scan(&file.ID, &file.CoolNotCool, &file.Body)
 		files = append(files, file)
@@ -43,7 +48,7 @@ func GetAllFilesMDL() []File {
 }
 
 // GetOneMessage Selects by ID fom db
-func GetOneFileMDL(id string) File {
+func GetOneFileMDL(id string) FileWithId {
 	fmt.Println("In the get one model", id)
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
@@ -53,9 +58,9 @@ func GetOneFileMDL(id string) File {
 
 	row, err := db.Query(`SELECT * FROM files where id =` + id)
 
-	var entry []File
+	var entry []FileWithId
 	for row.Next() {
-		file := File{}
+		file := FileWithId{}
 		// gotta get all the fields!
 		row.Scan(&file.ID, &file.CoolNotCool, &file.Body)
 		entry = append(entry, file)
@@ -67,19 +72,34 @@ func GetOneFileMDL(id string) File {
 }
 
 // PostFileMDL function
-func PostFileMDL(body File) []File {
-	fmt.Println("in POSTmessages:", body)
+func PostFileMDL(body File) []FileWithId {
+	fmt.Println("in POST File:", body)
 	db, err := sql.Open("postgres", d.ConnStr)
+	// fmt.Println("connstr:", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
-	var file []File
-	rows, err := db.Query(
-		`INSERT INTO messages(ID, Read, Starred, Selected, Subject, Body, Labels, CreatedAt, UpdatedAt) VALUES`,
-		body,
-	)
-	defer rows.Close()
-	return file
+	defer db.Close()
+	var postFile []FileWithId
+	var CoolField = "false"
+	if body.CoolNotCool == true {
+		CoolField = "true"
+	}
+
+	// queryStr := fmt.Sprintf("INSERT INTO files (ID, CoolNotCool, Body) VALUES (%[1]v%[2]v %[3]v", 0, CoolField, body.Body)
+
+	// queryStr := "INSERT INTO files (ID, CoolNotCool, Body) VALUES (5, true, 'hi')"
+	queryStr := fmt.Sprintf("INSERT INTO files (CoolNotCool, Body) VALUES (%v, '%v')", CoolField, body.Body)
+
+	fmt.Println("querStr:", queryStr)
+
+	_, err = db.Exec(queryStr)
+	if err != nil {
+		panic(err)
+	}
+	// defer rows.Close()
+
+	return postFile
 }
 
 // EditMessage function

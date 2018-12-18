@@ -24,7 +24,9 @@ CREATE TABLE messages (
 
 * mock post request: http POST :3003/messages read=true starred=false selected=false subject='Subject Entry' body='Body Entry' labels='{"personal", "dev"}'
 
-## database creation with *Goose*
+* mock patch request: http PATCH :3003/messages/1 read=true starred=false subject="Edited Subject" body="Edited Body" labels='{"personal"}'
+
+## database migrations with *Goose*
 
 [Goose 💸](https://github.com/pressly/goose)
 

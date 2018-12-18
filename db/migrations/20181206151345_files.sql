@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE files (
- id serial PRIMARY KEY,
+ id  SERIAL PRIMARY KEY,
  coolNotCool boolean,
  body text UNIQUE NOT NULL
 );

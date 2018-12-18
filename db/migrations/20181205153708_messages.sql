@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE messages (
- id serial PRIMARY KEY,
+ id SERIAL PRIMARY KEY,
  read boolean,
  starred boolean,
  selected boolean,

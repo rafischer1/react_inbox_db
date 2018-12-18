@@ -13,7 +13,7 @@ import (
 
 // Message the psql table messages
 type Message struct {
-	ID        int64     `json:"id"`
+	ID        int       `json:"id"`
 	Read      bool      `json:"read"`
 	Starred   bool      `json:"starred"`
 	Selected  bool      `json:"selected"`
@@ -39,6 +39,7 @@ func GetAllMessages() []Message {
 	var messages []Message
 	for rows.Next() {
 		message := Message{}
+
 		// gotta get all the fields!
 		rows.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
 		messages = append(messages, message)

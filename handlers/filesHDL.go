@@ -50,7 +50,7 @@ func GetOneFile(w http.ResponseWriter, req *http.Request) {
 	w.Write(resData)
 }
 
-// PostMessage is a function
+// PostFile is a handler function
 func PostFile(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler post req.Body:", req.Body)
 	body := models.File{}
@@ -58,18 +58,16 @@ func PostFile(w http.ResponseWriter, req *http.Request) {
 	json.NewDecoder(req.Body).Decode(&body)
 	fmt.Println("decoder json:", body)
 
-	// gonna need to parse these to look like this: 2018-12-06 11:35:13
-
 	data := models.PostFileMDL(body)
 
-	File := &models.File{}
+	File := &models.FileWithId{}
 	fmt.Println("req File handler:", File, data)
 	w.WriteHeader(http.StatusOK)
 
 	fmt.Fprint(w, "Content: %v", data)
 }
 
-// EditMessage handler calls on the model to handle a PUT
+// EditFile handler calls on the model to handle a PUT
 func EditFile(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler edit")
 
