@@ -22,9 +22,9 @@ CREATE TABLE messages (
 
   `/messages/{id}`
 
-* mock post request: http POST :3003/messages read=true starred=false selected=false subject='Subject Entry' body='Body Entry' labels='{"personal", "dev"}'
+* mock `POST` request: http POST :3003/messages read=true starred=false selected=false subject='Subject Entry' body='Body Entry' labels='{"personal", "dev"}'
 
-* mock patch request: http PATCH :3003/messages/1 read=true starred=false subject="Edited Subject" body="Edited Body" labels='{"personal"}'
+* mock `PUT` request: http PUT :3003/messages/1 read=true starred=false subject="Edited Subject" body="Edited Body" labels='{"personal"}'
 
 ## database migrations with *Goose*
 

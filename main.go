@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -30,6 +33,16 @@ func main() {
 	initDb()
 	defer db.Close()
 	r := mux.NewRouter()
+	stopChan := make(chan os.Signal)
+	signal.Notify(stopChan, os.Interrupt)
+
+	srv := &http.Server{
+		Addr:         dbport,
+		Handler:      r,
+		ReadTimeout:  60 * time.Second,
+		WriteTimeout: 60 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
 
 	r.HandleFunc("/messages", handlers.GetAll).Methods("GET")
 	r.HandleFunc("/messages/{id}", handlers.GetOne).Methods("GET")
@@ -47,8 +60,17 @@ func main() {
 	r.Handle("/", http.FileServer(http.Dir("static/")))
 
 	// set router
-	log.Println("Listening...3003")
-	http.ListenAndServe(":3003", r)
+	go func() {
+		log.Println("Listening...3003")
+		http.ListenAndServe(":3003", r)
+	}()
+
+	<-stopChan
+	log.Println("Shutting down server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	srv.Shutdown(ctx)
+	defer cancel()
+	log.Println("Server stopped")
 }
 
 func initDb() {
