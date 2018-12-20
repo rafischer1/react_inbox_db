@@ -9,8 +9,6 @@ import (
 	d "github.com/rafischer1/react_inbox_db/db"
 )
 
-// initialize the db connection
-
 // Message the psql table messages
 type Message struct {
 	ID        int       `json:"id"`
@@ -30,6 +28,7 @@ func GetAllMessages() []Message {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Printf("db:%v", db)
 	defer db.Close()
 	rows, err := db.Query("SELECT * FROM messages")
@@ -37,6 +36,7 @@ func GetAllMessages() []Message {
 	defer rows.Close()
 
 	var messages []Message
+
 	for rows.Next() {
 		message := Message{}
 
@@ -44,9 +44,11 @@ func GetAllMessages() []Message {
 		rows.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
 		messages = append(messages, message)
 	}
+
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
+
 	return messages
 }
 
@@ -63,15 +65,18 @@ func GetOneMessage(id string) []Message {
 	row, err := db.Query(`SELECT * FROM messages where id =` + id)
 
 	var entry []Message
+
 	for row.Next() {
 		message := Message{}
 		// gotta get all the fields!
 		row.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
 		entry = append(entry, message)
 	}
+
 	if err := row.Err(); err != nil {
 		log.Fatal(err)
 	}
+
 	return entry
 }
 
@@ -83,12 +88,16 @@ func PostMessage(body Message) []Message {
 	if err != nil {
 		panic(err)
 	}
+
 	var message []Message
-	rows, err := db.Query(
-		`INSERT INTO messages(ID, Read, Starred, Selected, Subject, Body, Labels, CreatedAt, UpdatedAt) VALUES`,
+	row, err := db.Query(
+		`INSERT INTO messages(ID, Read, Starred, Selected, Subject, Body, Labels, CreatedAt, UpdatedAt) VALUES (:ID, :Read, :Starred, :Selected, :Subject, :Body, :Labels, :CreatedAt, :UpdatedAt)`,
 		body,
 	)
-	defer rows.Close()
+	if err != nil {
+		panic(err)
+	}
+	defer row.Close()
 	return message
 }
 

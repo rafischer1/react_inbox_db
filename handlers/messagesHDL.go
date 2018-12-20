@@ -10,12 +10,13 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/rafischer1/react_inbox_db/models"
+	m "github.com/rafischer1/react_inbox_db/models"
 )
 
 // GetAll handler to handle all records
 func GetAll(w http.ResponseWriter, req *http.Request) {
 	// fmt.Println("in the getall handler", req)
-	data := models.GetAllMessages()
+	data := m.GetAllMessages()
 
 	//return the data
 	fmt.Printf("d: %+v", data)
@@ -37,7 +38,7 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Println("In req.URL.String() id:", id)
 
-	data := models.GetOneMessage(id)
+	data := m.GetOneMessage(id)
 	json.Marshal(data)
 
 	//return the data
@@ -54,16 +55,22 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("In the handler post req.Body:", req.Body)
-	body := models.Message{}
+	body := m.Message{}
 
 	json.NewDecoder(req.Body).Decode(&body)
-	fmt.Println("decoder json:", body)
+
+	fmt.Println("decoder json:", &body)
 
 	// gonna need to parse these to look like this: 2018-12-06 11:35:13
-	body.CreatedAt = time.Now().Local()
-	body.UpdatedAt = time.Now().Local()
+	newPost := m.Message{}
+	newPost.Starred = true
+	newPost.Read = true
+	newPost.Subject = "Test One"
+	newPost.Body = "Test Two"
+	newPost.CreatedAt = time.Now().Local()
+	newPost.UpdatedAt = time.Now().Local()
 
-	data := models.PostMessage(body)
+	data := models.PostMessage(newPost)
 
 	Message := &models.Message{}
 	fmt.Println("req Message handler:", Message, data)
