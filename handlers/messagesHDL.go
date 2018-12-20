@@ -54,6 +54,7 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
+
 	fmt.Println("In the handler post req.Body:", req.Body)
 	body := m.Message{}
 
@@ -74,6 +75,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 
 	Message := &models.Message{}
 	fmt.Println("req Message handler:", Message, data)
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 	fmt.Fprint(w, "Content: %v", data)
@@ -94,7 +96,8 @@ func DeleteMessage(w http.ResponseWriter, req *http.Request) {
 	reqID := req.URL.String()
 	id := strings.Split(reqID, "/")[2]
 	data := models.DeleteMessage(id)
-	vars := mux.Vars(req)
+	// vars := mux.Vars(req)
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "Deleted Entry:", vars["Deleted Entry"], data, id)
+	fmt.Fprint(w, "Deleted Entry:", data)
 }
