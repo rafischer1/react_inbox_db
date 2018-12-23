@@ -44,7 +44,7 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	r.HandleFunc("/messages", handlers.GetAll).Methods("GET")
+	r.HandleFunc("/messages", handlers.GetAll).Methods("GET", "OPTIONS")
 	r.HandleFunc("/messages/{id}", handlers.GetOne).Methods("GET")
 	r.HandleFunc("/messages", handlers.PostMessage).Methods("POST")
 	r.HandleFunc("/messages/{id}", handlers.EditMessage).Methods("PUT")

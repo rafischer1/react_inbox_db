@@ -18,8 +18,6 @@ CREATE TABLE messages (
 
 ## routes 🚍
 
-  `/files/{id}`
-
   `/messages/{id}`
 
 * mock `POST` request: http POST :3003/messages read=true starred=false selected=false subject='Subject Entry' body='Body Entry' labels='{"personal", "dev"}'

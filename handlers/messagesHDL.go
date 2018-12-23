@@ -14,6 +14,7 @@ import (
 
 // GetAll handler to handle all records
 func GetAll(w http.ResponseWriter, req *http.Request) {
+	enableCors(&w)
 	// fmt.Println("in the getall handler", req)
 	data := m.GetAllMessages()
 
@@ -31,7 +32,7 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 
 // GetOne handler to handle one record
 func GetOne(w http.ResponseWriter, req *http.Request) {
-
+	enableCors(&w)
 	reqID := req.URL.String()
 	id := strings.Split(reqID, "/")[2]
 
@@ -53,7 +54,7 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
-
+	enableCors(&w)
 	fmt.Println("In the handler post req.Body:", req.Body)
 	body := m.Message{}
 	fmt.Println("before new encoder", body)
@@ -84,6 +85,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 
 // EditMessage handler calls on the model to handle a PUT
 func EditMessage(w http.ResponseWriter, req *http.Request) {
+	enableCors(&w)
 	fmt.Println("In the handler edit")
 
 	data := models.EditMessage()
@@ -94,6 +96,7 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 
 // DeleteMessage sends the delete request to the db
 func DeleteMessage(w http.ResponseWriter, req *http.Request) {
+	enableCors(&w)
 	reqID := req.URL.String()
 	id := strings.Split(reqID, "/")[2]
 	data := models.DeleteMessage(id)
@@ -101,4 +104,8 @@ func DeleteMessage(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "Deleted Entry:", data)
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
