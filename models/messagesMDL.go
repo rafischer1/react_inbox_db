@@ -81,41 +81,22 @@ func GetOneMessage(id string) []Message {
 }
 
 // PostMessage function
-// func PostMessage(body Message) []Message {
-// 	fmt.Println("in POSTmessages:", body)
-
-// 	db, err := sql.Open("postgres", d.ConnStr)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	var message []Message
-// 	rows, err := db.Query(
-// 		`INSERT INTO messages(ID, Read, Starred, Selected, Subject, Body, Labels, CreatedAt, UpdatedAt) VALUES ($1)`,
-// 		body,
-// 	)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer rows.Close()
-// 	return message
-// }
-
-func PostMessage(Read bool, Starred bool, Selected bool, Subject string, Body string, Labels string, createdAt time.Time, updatedAt time.Time) (int, error) {
+func PostMessage(Read bool, Starred bool, Selected bool, Subject string, Body string, Labels string, createdAt time.Time, updatedAt time.Time) (int, string, error) {
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
 	//Create
 	var messageID int
-	errTwo := db.QueryRow(`INSERT INTO messages(read, starred, selected, subject, body, labels) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`, Read, Starred, Selected, Subject, Body, Labels).Scan(&messageID)
+	var messageSubject string
+	errTwo := db.QueryRow(`INSERT INTO messages(read, starred, selected, subject, body, labels) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`, Read, Starred, Selected, Subject, Body, Labels).Scan(&messageID, &messageSubject)
 
 	if errTwo != nil {
-		return 0, errTwo
+		return 0, "undefined", errTwo
 	}
 
 	fmt.Printf("Last inserted ID: %v\n", messageID)
-	return messageID, errTwo
+	return messageID, messageSubject, errTwo
 }
 
 // EditMessage function

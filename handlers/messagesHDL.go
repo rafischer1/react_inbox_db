@@ -67,17 +67,19 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 	body.Labels = "{'personal', 'dev'}"
 	fmt.Println("decoder json:", body.Subject)
 
-	data, err := models.PostMessage(body.Read, body.Starred, body.Selected, body.Subject, body.Body, body.Labels, body.CreatedAt, body.UpdatedAt)
+	// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
+
+	postID, postSubject, err := models.PostMessage(body.Read, body.Starred, body.Selected, body.Subject, body.Body, body.Labels, body.CreatedAt, body.UpdatedAt)
 	if err != nil {
 		panic(err)
 	}
 
 	Message := &models.Message{}
-	fmt.Println("req Message handler:", Message, data)
+	fmt.Println("req Message handler:", Message)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
-	fmt.Fprint(w, "Content: %v", data)
+	fmt.Fprint(w, "Content: %v", postID, postSubject)
 }
 
 // EditMessage handler calls on the model to handle a PUT
