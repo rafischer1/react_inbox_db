@@ -19,8 +19,9 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 	data := m.GetAllMessages()
 
 	//return the data
-	fmt.Printf("d: %+v", data)
+	// fmt.Printf("d: %+v", data)
 	w.WriteHeader(http.StatusOK)
+	fmt.Println("Hit the getAll messages route:", http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	resData, err := json.Marshal(data)
 	if err != nil {
@@ -108,4 +109,6 @@ func DeleteMessage(w http.ResponseWriter, req *http.Request) {
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE,PUT")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 }

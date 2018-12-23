@@ -44,11 +44,11 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	r.HandleFunc("/messages", handlers.GetAll).Methods("GET", "OPTIONS")
+	r.HandleFunc("/messages", handlers.GetAll).Methods("GET")
 	r.HandleFunc("/messages/{id}", handlers.GetOne).Methods("GET")
 	r.HandleFunc("/messages", handlers.PostMessage).Methods("POST")
 	r.HandleFunc("/messages/{id}", handlers.EditMessage).Methods("PUT")
-	r.HandleFunc("/messages/{id}", handlers.DeleteMessage).Methods("DELETE")
+	r.HandleFunc("/messages/{id}", handlers.DeleteMessage).Methods("DELETE", "OPTIONS")
 
 	r.HandleFunc("/files", handlers.GetAllFiles).Methods("GET")
 	r.HandleFunc("/files/{id}", handlers.GetOneFile).Methods("GET")
@@ -135,4 +135,10 @@ func dbConfig() map[string]string {
 	conf[dbname] = name
 
 	return conf
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET,POST,DELETE,PATCH,PUT")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 }
