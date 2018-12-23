@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gorilla/mux"
 
@@ -57,21 +56,21 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Println("In the handler post req.Body:", req.Body)
 	body := m.Message{}
+	fmt.Println("before new encoder", body)
 
-	json.NewDecoder(req.Body).Decode(&body)
+	json.NewDecoder(req.Body).Decode(body)
+	body.Subject = "hi there"
+	body.Read = true
+	body.Selected = true
+	body.Starred = false
+	body.Body = "Test one"
+	body.Labels = "{'personal', 'dev'}"
+	fmt.Println("decoder json:", body.Subject)
 
-	fmt.Println("decoder json:", &body)
-
-	// gonna need to parse these to look like this: 2018-12-06 11:35:13
-	newPost := m.Message{}
-	newPost.Starred = true
-	newPost.Read = true
-	newPost.Subject = "Test One"
-	newPost.Body = "Test Two"
-	newPost.CreatedAt = time.Now().Local()
-	newPost.UpdatedAt = time.Now().Local()
-
-	data := models.PostMessage(newPost)
+	data, err := models.PostMessage(body.Read, body.Starred, body.Selected, body.Subject, body.Body, body.Labels, body.CreatedAt, body.UpdatedAt)
+	if err != nil {
+		panic(err)
+	}
 
 	Message := &models.Message{}
 	fmt.Println("req Message handler:", Message, data)
