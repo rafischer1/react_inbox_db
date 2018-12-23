@@ -4,22 +4,19 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"time"
 
 	d "github.com/rafischer1/react_inbox_db/db"
 )
 
 // Message the psql table messages
 type Message struct {
-	ID        int       `json:"id"`
-	Read      bool      `json:"read"`
-	Starred   bool      `json:"starred"`
-	Selected  bool      `json:"selected"`
-	Subject   string    `json:"subject"`
-	Body      string    `json:"body"`
-	Labels    string    `json:"labels"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID       int    `json:"id"`
+	Read     bool   `json:"read"`
+	Starred  bool   `json:"starred"`
+	Selected bool   `json:"selected"`
+	Subject  string `json:"subject"`
+	Body     string `json:"body"`
+	Labels   string `json:"labels"`
 }
 
 // GetAllMessages function
@@ -41,7 +38,7 @@ func GetAllMessages() []Message {
 		message := Message{}
 
 		// gotta get all the fields!
-		rows.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
+		rows.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
 		messages = append(messages, message)
 	}
 
@@ -69,7 +66,7 @@ func GetOneMessage(id string) []Message {
 	for row.Next() {
 		message := Message{}
 		// gotta get all the fields!
-		row.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels, &message.CreatedAt, &message.UpdatedAt)
+		row.Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
 		entry = append(entry, message)
 	}
 
@@ -81,7 +78,7 @@ func GetOneMessage(id string) []Message {
 }
 
 // PostMessage function
-func PostMessage(Read bool, Starred bool, Selected bool, Subject string, Body string, Labels string, createdAt time.Time, updatedAt time.Time) (int, string, error) {
+func PostMessage(Read bool, Starred bool, Selected bool, Subject string, Body string, Labels string) (int, string, error) {
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)

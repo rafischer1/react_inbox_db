@@ -70,7 +70,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 
 	// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
 
-	postID, postSubject, err := models.PostMessage(body.Read, body.Starred, body.Selected, body.Subject, body.Body, body.Labels, body.CreatedAt, body.UpdatedAt)
+	postID, postSubject, err := models.PostMessage(body.Read, body.Starred, body.Selected, body.Subject, body.Body, body.Labels)
 	if err != nil {
 		panic(err)
 	}
