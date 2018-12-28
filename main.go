@@ -46,7 +46,7 @@ func main() {
 
 	r.HandleFunc("/messages", handlers.GetAll).Methods("GET")
 	r.HandleFunc("/messages/{id}", handlers.GetOne).Methods("GET")
-	r.HandleFunc("/messages", handlers.PostMessage).Methods("POST")
+	r.HandleFunc("/messages", handlers.PostMessage).Methods("POST", "OPTIONS")
 	r.HandleFunc("/messages/{id}", handlers.EditMessage).Methods("PUT")
 	r.HandleFunc("/messages/{id}", handlers.DeleteMessage).Methods("DELETE", "OPTIONS")
 

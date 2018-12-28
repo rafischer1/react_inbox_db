@@ -77,7 +77,7 @@ func GetOneMessage(id string) []Message {
 }
 
 // PostMessage function
-func PostMessage(Read bool, Starred bool, Selected bool, Subject string, Body string, Labels string) (int, string, error) {
+func PostMessage(Subject string, Body string) (int, string, error) {
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
@@ -85,7 +85,7 @@ func PostMessage(Read bool, Starred bool, Selected bool, Subject string, Body st
 	//Create
 	var messageID int
 	var messageSubject string
-	errTwo := db.QueryRow(`INSERT INTO messages(read, starred, selected, subject, body, labels) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`, Read, Starred, Selected, Subject, Body, Labels).Scan(&messageID, &messageSubject)
+	errTwo := db.QueryRow(`INSERT INTO messages(subject, body) VALUES($1, $2) RETURNING id`, Subject, Body).Scan(&messageID)
 
 	if errTwo != nil {
 		return 0, "undefined", errTwo

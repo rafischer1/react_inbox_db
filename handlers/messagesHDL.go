@@ -56,22 +56,15 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
-	fmt.Println("In the handler post req.Body:", req.Body)
+	fmt.Printf("In the handler post req.Body: %v", req)
 	body := m.Message{}
+
 	fmt.Println("before new encoder", body)
 
 	json.NewDecoder(req.Body).Decode(body)
-	body.Subject = "hi there"
-	body.Read = true
-	body.Selected = true
-	body.Starred = false
-	body.Body = "Test one"
-	body.Labels = "{'personal', 'dev'}"
-	fmt.Println("decoder json:", body.Subject)
-
 	// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
 
-	postID, postSubject, err := models.PostMessage(body.Read, body.Starred, body.Selected, body.Subject, body.Body, body.Labels)
+	postID, postSubject, err := models.PostMessage(body.Subject, body.Body)
 	if err != nil {
 		panic(err)
 	}

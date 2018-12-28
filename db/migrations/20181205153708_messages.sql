@@ -4,9 +4,9 @@ CREATE TABLE messages (
  read boolean,
  starred boolean,
  selected boolean,
- subject text UNIQUE NOT NULL,
- body text UNIQUE NOT NULL,
- labels text,
+ subject text,
+ body text,
+ labels text
 );
 
 INSERT INTO messages
