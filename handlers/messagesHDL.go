@@ -56,25 +56,31 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
-	fmt.Printf("In the handler post req.Body: %v", req)
-	body := m.Message{}
+	fmt.Printf("In the handler post req.Body: %v", req.Method)
+	if req.Method == "OPTIONS" {
+		fmt.Println("Options in POST")
+	}
+	if req.Method == "POST" {
+		body := m.Message{}
 
-	fmt.Println("before new encoder", body)
+		fmt.Println("before new encoder", &req.Body)
 
-	json.NewDecoder(req.Body).Decode(body)
-	// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
+		json.NewDecoder(req.Body).Decode(body)
+		// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
 
-	postID, postSubject, err := models.PostMessage(body.Subject, body.Body)
-	if err != nil {
-		panic(err)
+		postID, postSubject, err := models.PostMessage(body.Subject, body.Body)
+		if err != nil {
+			panic(err)
+		}
+
+		Message := &models.Message{}
+		fmt.Println("req Message handler:", Message)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		fmt.Fprint(w, "Content: %v", postID, postSubject)
 	}
 
-	Message := &models.Message{}
-	fmt.Println("req Message handler:", Message)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	fmt.Fprint(w, "Content: %v", postID, postSubject)
 }
 
 // EditMessage handler calls on the model to handle a PUT
