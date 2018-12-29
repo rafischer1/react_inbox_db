@@ -137,8 +137,11 @@ func dbConfig() map[string]string {
 	return conf
 }
 
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "GET,POST,DELETE,PATCH,PUT")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+func GetPort() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4747"
+		log.Println("[-] No PORT environment variable detected. Setting to ", port)
+	}
+	return ":" + port
 }
