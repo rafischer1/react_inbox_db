@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -11,6 +13,10 @@ import (
 	"github.com/rafischer1/react_inbox_db/models"
 	m "github.com/rafischer1/react_inbox_db/models"
 )
+
+type Reader interface {
+	Read(buf []byte) (n int, err error)
+}
 
 // GetAll handler to handle all records
 func GetAll(w http.ResponseWriter, req *http.Request) {
@@ -56,29 +62,36 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
-	fmt.Printf("In the handler post req.Body: %v", req.Method)
+	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
 		fmt.Println("Options in POST")
 	}
 	if req.Method == "POST" {
-		body := m.Message{}
+		var bodyBytes []byte
+		if req.Body != nil {
+			bodyBytes, _ = ioutil.ReadAll(req.Body)
+		}
 
-		fmt.Println("before new encoder", &req.Body)
-
-		json.NewDecoder(req.Body).Decode(body)
+		// Restore the io.ReadCloser to its original state
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		// Use the content
+		bodyString := string(bodyBytes)
+		// body := m.Message{}
+		str := bodyString
+		res := m.Message{}
+		json.Unmarshal([]byte(str), &res)
+		fmt.Println("Res subject:", res.Subject, "res body:", res.Body)
+		// json.NewDecoder(req.Body).Decode(body)
 		// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
 
-		postID, postSubject, err := models.PostMessage(body.Subject, body.Body)
+		data, err := models.PostMessage(res.Subject, res.Body)
 		if err != nil {
 			panic(err)
 		}
 
-		Message := &models.Message{}
-		fmt.Println("req Message handler:", Message)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-
-		fmt.Fprint(w, "Content: %v", postID, postSubject)
+		fmt.Fprint(w, "Content: %v", data)
 	}
 
 }
