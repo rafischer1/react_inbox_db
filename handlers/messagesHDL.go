@@ -16,6 +16,8 @@ type Reader interface {
 	Read(buf []byte) (n int, err error)
 }
 
+var bodyBytes []byte
+
 // GetAll handler to handle all records
 func GetAll(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
@@ -65,7 +67,6 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Options in POST:", req.Method)
 	}
 	if req.Method == "POST" {
-		var bodyBytes []byte
 		if req.Body != nil {
 			bodyBytes, _ = ioutil.ReadAll(req.Body)
 		}
@@ -100,26 +101,23 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Options in EDIT:", req.Method)
 	}
 	if req.Method == "PUT" {
-		fmt.Println("In the handler edit method, req.id:", req.Method, req.Body)
+		fmt.Println("handler edit method:", req.Method)
 		// something not right with the res and req.Body but setup is ok
-		var bodyBytes []byte
 		if req.Body != nil {
 			bodyBytes, _ = ioutil.ReadAll(req.Body)
 		}
-
 		// Restore the io.ReadCloser to its original state
 		req.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 		// Use the content
 		bodyString := string(bodyBytes)
-		// body := m.Message{}
 		str := bodyString
 		res := m.Message{}
 		json.Unmarshal([]byte(str), &res)
-		fmt.Println("Res", res, "res body:", res.Body)
+		fmt.Println("Res labels", res.Labels, "Res id:", res.ID)
 		// json.NewDecoder(req.Body).Decode(body)
 		// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
 
-		data, err := models.EditMessage(res.ID, res.Body)
+		data, err := models.EditMessage(res.ID, res.Labels)
 		if err != nil {
 			panic(err)
 		}

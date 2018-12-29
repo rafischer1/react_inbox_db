@@ -98,28 +98,24 @@ func PostMessage(Subject string, Body string) ([]Message, error) {
 
 // EditMessage function
 func EditMessage(ID int, Body string) ([]Message, error) {
-	fmt.Println("In the model edit")
+	fmt.Println("In the model edit id and body:", ID, Body)
 
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
 	}
 
-	rows, err := db.Query("SELECT * FROM messages")
+	message := Message{}
+	var entry []Message
+	sqlStatement := `UPDATE messages SET Labels = $2 WHERE id = $1 RETURNING id, Labels;`
 
-	defer rows.Close()
-	var messages []Message
-	for rows.Next() {
-		message := Message{}
-		rows.Scan(&message.ID, &message.Subject)
-		messages = append(messages, message)
+	err = db.QueryRow(sqlStatement, ID, Body).Scan(&message.ID, &message.Labels)
+	if err != nil {
+		panic(err)
 	}
-	if err := rows.Err(); err != nil {
-		log.Fatal(err)
-	}
+	entry = append(entry, message)
 
-	return messages, err
-
+	return entry, err
 }
 
 // DeleteMessage Model function
