@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/gorilla/mux"
-
 	"github.com/rafischer1/react_inbox_db/models"
 	m "github.com/rafischer1/react_inbox_db/models"
 )
@@ -64,7 +62,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
 	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
-		fmt.Println("Options in POST")
+		fmt.Println("Options in POST:", req.Method)
 	}
 	if req.Method == "POST" {
 		var bodyBytes []byte
@@ -93,18 +91,43 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "Content: %v", data)
 	}
-
 }
 
 // EditMessage handler calls on the model to handle a PUT
 func EditMessage(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
-	fmt.Println("In the handler edit")
+	if req.Method == "OPTIONS" {
+		fmt.Println("Options in EDIT:", req.Method)
+	}
+	if req.Method == "PUT" {
+		fmt.Println("In the handler edit method, req.id:", req.Method, req.Body)
+		// something not right with the res and req.Body but setup is ok
+		var bodyBytes []byte
+		if req.Body != nil {
+			bodyBytes, _ = ioutil.ReadAll(req.Body)
+		}
 
-	data := models.EditMessage()
-	vars := mux.Vars(req)
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "Content:", vars["Content"], data)
+		// Restore the io.ReadCloser to its original state
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		// Use the content
+		bodyString := string(bodyBytes)
+		// body := m.Message{}
+		str := bodyString
+		res := m.Message{}
+		json.Unmarshal([]byte(str), &res)
+		fmt.Println("Res", res, "res body:", res.Body)
+		// json.NewDecoder(req.Body).Decode(body)
+		// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
+
+		data, err := models.EditMessage(res.ID, res.Body)
+		if err != nil {
+			panic(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, "Content: %v", data)
+	}
 }
 
 // DeleteMessage sends the delete request to the db

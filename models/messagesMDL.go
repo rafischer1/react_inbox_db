@@ -97,7 +97,7 @@ func PostMessage(Subject string, Body string) ([]Message, error) {
 }
 
 // EditMessage function
-func EditMessage() []Message {
+func EditMessage(ID int, Body string) ([]Message, error) {
 	fmt.Println("In the model edit")
 
 	db, err := sql.Open("postgres", d.ConnStr)
@@ -118,7 +118,7 @@ func EditMessage() []Message {
 		log.Fatal(err)
 	}
 
-	return messages
+	return messages, err
 
 }
 
