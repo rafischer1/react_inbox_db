@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/subosito/gotenv"
@@ -16,10 +15,12 @@ var ConnStr = DBInit()
 // DBInit initializes the databasw using .env vars
 func DBInit() string {
 	gotenv.Load()
-	dbname := os.Getenv("DBNAME")
-	dbuser := os.Getenv("DBUSER")
-	ConnStr := fmt.Sprintf("user=%[1]v "+
-		"dbname=%[2]v sslmode=disable", dbuser, dbname)
+	// dbname := os.Getenv("DBNAME")
+	// dbuser := os.Getenv("DBUSER")
+	// ConnStr := fmt.Sprintf("user=%[1]v "+
+	// 	"dbname=%[2]v sslmode=disable", dbuser, dbname)
+	url := os.Getenv("DATABASE_URL")
+	ConnStr := url
 	return ConnStr
 }
 
