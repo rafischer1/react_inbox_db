@@ -62,7 +62,8 @@ func main() {
 
 	// set router
 	go func() {
-		log.Println("Listening...3003")
+
+		log.Println("[-] Listening on...", port)
 		http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	}()
 
