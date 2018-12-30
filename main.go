@@ -32,6 +32,7 @@ const (
 func main() {
 	initDb()
 	defer db.Close()
+	port := GetPort()
 	r := mux.NewRouter()
 	stopChan := make(chan os.Signal)
 	signal.Notify(stopChan, os.Interrupt)
@@ -62,7 +63,7 @@ func main() {
 	// set router
 	go func() {
 		log.Println("Listening...3003")
-		http.ListenAndServe(":3003", r)
+		http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	}()
 
 	<-stopChan
@@ -140,7 +141,7 @@ func dbConfig() map[string]string {
 func GetPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "4747"
+		port = "5432"
 		log.Println("[-] No PORT environment variable detected. Setting to ", port)
 	}
 	return ":" + port
