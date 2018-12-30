@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose"
 	"github.com/subosito/gotenv"
 
 	"github.com/rafischer1/react_inbox_db/handlers"
@@ -31,6 +32,7 @@ const (
 
 func main() {
 	initDb()
+	goose.AddMigration(Up, Down)
 	defer db.Close()
 	// port := GetPort()
 	r := mux.NewRouter()
@@ -138,11 +140,18 @@ func dbConfig() map[string]string {
 	return conf
 }
 
-func GetPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5432"
-		log.Println("[-] No PORT environment variable detected. Setting to ", port)
+func Up(tx *sql.Tx) error {
+	_, err := tx.Exec("CREATE TABLE messages (id SERIAL PRIMARY KEY, read boolean, starred boolean, selected boolean, subject text, body text,labels text);")
+	if err != nil {
+		return err
 	}
-	return ":" + port
+	return nil
+}
+
+func Down(tx *sql.Tx) error {
+	_, err := tx.Exec("DROP TABLE messages;")
+	if err != nil {
+		return err
+	}
+	return nil
 }
