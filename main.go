@@ -53,12 +53,6 @@ func main() {
 	r.HandleFunc("/messages/{id}", handlers.EditMessage).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/messages/{id}", handlers.DeleteMessage).Methods("DELETE", "OPTIONS")
 
-	r.HandleFunc("/files", handlers.GetAllFiles).Methods("GET")
-	r.HandleFunc("/files/{id}", handlers.GetOneFile).Methods("GET")
-	r.HandleFunc("/files", handlers.PostFile).Methods("POST")
-	r.HandleFunc("/files/{id}", handlers.EditFile).Methods("PUT")
-	r.HandleFunc("/files/{id}", handlers.DeleteFile).Methods("DELETE")
-
 	// serve static files
 	r.Handle("/", http.FileServer(http.Dir("static/")))
 
@@ -140,6 +134,7 @@ func dbConfig() map[string]string {
 	return conf
 }
 
+// Up = goose Up
 func Up(tx *sql.Tx) error {
 	_, err := tx.Exec("CREATE TABLE messages (id SERIAL PRIMARY KEY, read boolean, starred boolean, selected boolean, subject text, body text,labels text);")
 	if err != nil {
@@ -148,6 +143,7 @@ func Up(tx *sql.Tx) error {
 	return nil
 }
 
+// Down = goose Down
 func Down(tx *sql.Tx) error {
 	_, err := tx.Exec("DROP TABLE messages;")
 	if err != nil {
