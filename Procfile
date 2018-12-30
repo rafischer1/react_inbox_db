@@ -1,1 +1,1 @@
-web: webapphr
+web: react_inbox_db -port $PORT
