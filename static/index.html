@@ -59,7 +59,7 @@
     box-shadow: 3px 6px #00ffaacd;
   }
 
-  .responce {
+  .response {
     border-bottom: 1px solid rgba(255, 255, 255, 0.153);
     border-radius: 10px;
   }
@@ -100,7 +100,7 @@
         let responseTwo = await response.json()
         console.log("html response:", response.status , "\nresponse:", responseTwo)
 
-        responseTwo.map((response) => { div.innerHTM += `<div class="response">ID: ${response.id}<br /> Subject:${response.subject}<br />></div>`})
+        responseTwo.map((response) => { div.innerHTM += `<div class="response">ID: ${response.id}/n Subject:${response.subject}/n </div>`})
         
       }
   </script>
