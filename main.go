@@ -64,13 +64,8 @@ func main() {
 
 	// set router
 	go func() {
-		log.Println("Listening...3003")
-		var port = os.Getenv("PORT")
-		if port == "" {
-			port = "4747"
-			fmt.Println("INFO: No PORT environment variable detected, defaulting to " + port)
-		}
-		http.ListenAndServe(":"+port, r)
+		log.Println("Listening...$1", os.Getenv("PORT"))
+		http.ListenAndServe(":"+os.Getenv("PORT"), r)
 	}()
 
 	<-stopChan
