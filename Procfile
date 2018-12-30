@@ -1,1 +1,1 @@
-web: fischer-go-inbox -port $PORT
+web:react_inbox_db -port $PORT
