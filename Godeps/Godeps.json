@@ -19,6 +19,11 @@
 			"Rev": "9eb73efc1fcc404148b56765b0d3f61d9a5ef8ee"
 		},
 		{
+			"ImportPath": "github.com/pressly/goose",
+			"Comment": "v2.4.0",
+			"Rev": "58aa6a8fce980d3a4dfd2f11b1951a2b4c8d8e57"
+		},
+		{
 			"ImportPath": "github.com/subosito/gotenv",
 			"Comment": "v1.1.1",
 			"Rev": "69b5b6104433beb2cb9c3ce00bdadf3c7c2d3f34"
