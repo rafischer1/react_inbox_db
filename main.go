@@ -65,7 +65,7 @@ func main() {
 	// set router
 	go func() {
 		log.Println("Listening...3003")
-		http.ListenAndServe(":3003", r)
+		http.ListenAndServe(":"+dbport, r)
 	}()
 
 	<-stopChan
