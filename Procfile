@@ -1,1 +1,1 @@
-web: react_inbox_db
+web: REACT_INBOX_DB -port $PORT
