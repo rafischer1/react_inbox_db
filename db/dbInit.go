@@ -13,31 +13,20 @@ import (
 var ConnStr = DBInit()
 
 // DBInit initializes the databasw using .env vars
+//FOR DEVELEOPMENT ONLY !!!!
+// func DBInit() string {
+// 	gotenv.Load()
+// 	dbname := os.Getenv("DBNAME")
+// 	dbuser := os.Getenv("DBUSER")
+// 	ConnStr := fmt.Sprintf("user=%[1]v "+
+// 		"dbname=%[2]v sslmode=disable", dbuser, dbname)
+// 	return ConnStr
+// }
+
+// FOR PRODUCTION BUILD ONLY!!!!
 func DBInit() string {
 	gotenv.Load()
-	// dbname := os.Getenv("DBNAME")
-	// dbuser := os.Getenv("DBUSER")
-	// ConnStr := fmt.Sprintf("user=%[1]v "+
-	// 	"dbname=%[2]v sslmode=disable", dbuser, dbname)
 	url := os.Getenv("DATABASE_URL")
 	ConnStr := url
 	return ConnStr
 }
-
-// func DBInit() string {
-// 	gotenv.Load()
-// 	var ConnStr string
-// 	dbname := os.Getenv("DBNAME")
-// 	dbuser := os.Getenv("DBUSER")
-// 	url := os.Getenv("DATABASE_URL")
-
-// 	if url == "" {
-// 		ConnStr := fmt.Sprintf("user=%[1]v "+
-// 			"dbname=%[2]v sslmode=disable", dbuser, dbname)
-// 		fmt.Println("Connstr for dev:", ConnStr)
-// 	} else if url != "" {
-// 		ConnStr := url
-// 		fmt.Println("Connstr for prod:", ConnStr)
-// 	}
-// 	return ConnStr
-// }
