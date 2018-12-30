@@ -4,55 +4,64 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>React Inbox Backend</title>
-  <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Raleway" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-    background-color: #6bc8c9;
+    background-color: #092021;
     color: #fffffa;
     /* text-shadow: 2px 3px black; */
-    font-family: 'Anonymous Pro', monospace;
-    font-size: large;
+    font-family: 'Raleway', sans-serif;
     text-align: center;
+    font-size: large;
+    word-spacing: 100%;
+    width: 90%;
+    margin: 5% 0 0 5%;
+    line-height: 250%;
   }
 
-  h1 {
-  font-size: 3em;
-  }
-
-  img {
-    box-shadow: 5px 4px black;
-     height: 400px;
-      width: 700px;
-  }
 
   a {
     color: #fffffa;
-    text-decoration-color: aquamarine;
+    text-decoration: none;
       border-radius: 20px;
+      border: 2px solid #59c5a1;
+      padding: 10px;
+      margin-top: 10%;
+  }
+
+  h1 {
+    font-size: 2em;
   }
 
   a:hover {
-    padding: 10px;
-    border: 4px solid #59c5a1;
-  
     color: #fefdccee;
     text-decoration-color: #5ec9a5
   }
 
   a:active {
-    padding: 10px;
-    color: #fefb4d;
+    color: #eeea78;
     text-decoration-color: #00ffaa;
     border: 4px solid  #00ffaa;
   }
    
   #div2 {
-    background-color: darkgrey;
-    border: 2px solid rgb(29, 19, 37);
+    background-color: rgba(169, 169, 169, 0.701);
+    border: 1px solid rgb(89, 48, 123);
+    box-shadow: 2px 2px #00ffaa76;
+    border-radius: 10px;
     margin: 2%;
     padding: 1%;
     text-align: left;
+  }
+
+  #div2:hover {
+    box-shadow: 3px 6px #00ffaacd;
+  }
+
+  .responce {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.153);
+    border-radius: 10px;
   }
   </style>
  
@@ -61,9 +70,11 @@
   <header>
     <nav>
       <h1>React Inbox Backend</h1>
+      <h2>CRUD routing for a RESTful API architecture in Go. <br />PostgreSQL migrations and seeds managed with raw sql commands
+</h2>
     </nav>
   </header>
-  <div id="div2"><h3>`/MESSAGES` RESPONSE</h3>
+  <div id="div2"><h3>`/MESSAGES` RESPONSE:</h3>
   <div id="div"></div>
   </div>
   <div class="site-img">
@@ -88,7 +99,8 @@
         ('/messages')
         let responseTwo = await response.json()
         console.log("html response:", response.status , "\nresponse:", responseTwo)
-        responseTwo.map((response) => { div.innerText += `ID: ${response.id} \n Subject:${response.subject}\n`})
+
+        responseTwo.map((response) => { div.innerHTM += `<div class="response">ID: ${response.id}<br /> Subject:${response.subject}<br />></div>`})
         
       }
   </script>
