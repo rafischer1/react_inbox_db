@@ -85,7 +85,7 @@
     let div = document.getElementById('div')
     const getAllMessages = async () => {
         let response = await fetch
-        ('http://localhost:3003/messages')
+        ('/messages')
         let responseTwo = await response.json()
         console.log("html response:", response.status , "\nresponse:", responseTwo)
         responseTwo.map((response) => { div.innerText += `ID: ${response.id} \n Subject:${response.subject}\n`})
