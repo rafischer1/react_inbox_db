@@ -32,7 +32,7 @@ const (
 func main() {
 	initDb()
 	defer db.Close()
-	port := GetPort()
+	// port := GetPort()
 	r := mux.NewRouter()
 	stopChan := make(chan os.Signal)
 	signal.Notify(stopChan, os.Interrupt)
@@ -62,9 +62,8 @@ func main() {
 
 	// set router
 	go func() {
-
-		log.Println("[-] Listening on...", port)
-		http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+		log.Println("Listening...3003")
+		http.ListenAndServe(":3003", r)
 	}()
 
 	<-stopChan
