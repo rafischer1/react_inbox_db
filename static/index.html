@@ -100,7 +100,7 @@
         let responseTwo = await response.json()
         console.log("html response:", response.status , "\nresponse:", responseTwo)
 
-        responseTwo.map((response) => { div.innerHTML += `<div class="response">ID: ${response.id}/n Subject:${response.subject}/n </div>`})
+        responseTwo.map((response) => { div.innerHTML += `<div class="response">ID: ${response.id} | Subject: ${response.subject}<br /></div>`})
         
       }
   </script>
