@@ -26,6 +26,8 @@ func GetAllMessages() []Message {
 		panic(err)
 	}
 
+	fmt.Println("in the get all messages db:", db)
+
 	defer db.Close()
 	rows, err := db.Query("SELECT * FROM messages")
 
