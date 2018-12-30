@@ -4,4 +4,4 @@ development:
 
 production:
   driver: postgres
-  uri: postgres://rxeylvdhjffdlt:760c5dc565361f0b08a90b3ef648b45e08f175e11c5adea57411a743d2369875@ec2-54-235-247-209.compute-1.amazonaws.com:5432/d5u528d565qh1s
+  connection: process.env.DATABASE_URL
