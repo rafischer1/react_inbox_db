@@ -60,7 +60,7 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 }
 
 // PostMessage is a function
-func PostMessage(w http.ResponseWriter, req *http.Request) {
+func PostMessage(w http.ResponseWriter, req *http.Request) bool {
 
 	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
@@ -70,7 +70,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 	}
 	if req.Method == "POST" {
 		enableCors(&w)
-		fmt.Println("header in POST req:" & w)
+		fmt.Println("header in POST req:", &w)
 		if req.Body != nil {
 			bodyBytes, _ = ioutil.ReadAll(req.Body)
 		}
@@ -93,6 +93,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "Content: %v", data)
+		return true
 	}
 }
 
