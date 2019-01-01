@@ -93,8 +93,9 @@ func PostMessage(w http.ResponseWriter, req *http.Request) bool {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "Content: %v", data)
-		return true
+
 	}
+	return true
 }
 
 // EditMessage handler calls on the model to handle a PUT
