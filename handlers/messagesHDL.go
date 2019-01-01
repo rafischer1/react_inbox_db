@@ -82,8 +82,6 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 		res := m.Message{}
 		json.Unmarshal([]byte(str), &res)
 		fmt.Println("Res subject:", res.Subject, "res body:", res.Body)
-		// json.NewDecoder(req.Body).Decode(body)
-		// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
 
 		data, err := models.PostMessage(res.Subject, res.Body)
 		if err != nil {
