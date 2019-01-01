@@ -60,13 +60,12 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 }
 
 // PostMessage is a function
-func PostMessage(w http.ResponseWriter, req *http.Request) bool {
+func PostMessage(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
 		enableCors(&w)
 		fmt.Println("Options in POST:", req.Method)
-		return false
 	}
 	if req.Method == "POST" {
 		enableCors(&w)
@@ -95,7 +94,6 @@ func PostMessage(w http.ResponseWriter, req *http.Request) bool {
 		fmt.Fprint(w, "Content: %v", data)
 
 	}
-	return true
 }
 
 // EditMessage handler calls on the model to handle a PUT
