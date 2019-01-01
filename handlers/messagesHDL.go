@@ -64,11 +64,12 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
-		enableCors(&w)
+
 		fmt.Println("Options in POST:", req.Method)
 	}
 	if req.Method == "POST" {
 		enableCors(&w)
+		fmt.Println("header in POST req:", &w)
 		if req.Body != nil {
 			bodyBytes, _ = ioutil.ReadAll(req.Body)
 		}
