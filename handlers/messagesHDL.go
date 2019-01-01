@@ -61,12 +61,14 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
-	enableCors(&w)
+
 	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
+		enableCors(&w)
 		fmt.Println("Options in POST:", req.Method)
 	}
 	if req.Method == "POST" {
+		enableCors(&w)
 		if req.Body != nil {
 			bodyBytes, _ = ioutil.ReadAll(req.Body)
 		}
@@ -98,9 +100,11 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 func EditMessage(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
 	if req.Method == "OPTIONS" {
+		enableCors(&w)
 		fmt.Println("Options in EDIT:", req.Method)
 	}
 	if req.Method == "PUT" {
+		enableCors(&w)
 		fmt.Println("handler edit method:", req.Method)
 		// something not right with the res and req.Body but setup is ok
 		if req.Body != nil {
