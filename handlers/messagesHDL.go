@@ -25,7 +25,6 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 	data := m.GetAllMessages()
 
 	//return the data
-	// fmt.Printf("d: %+v", data)
 	w.WriteHeader(http.StatusOK)
 	fmt.Println("Hit the getAll messages route:", http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
@@ -61,7 +60,7 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
-
+	enableCors(&w)
 	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
 		enableCors(&w)
@@ -118,8 +117,6 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 		res := m.Message{}
 		json.Unmarshal([]byte(str), &res)
 		fmt.Println("Res labels", res.Labels, "Res id:", res.ID)
-		// json.NewDecoder(req.Body).Decode(body)
-		// there is a problem here with ID - maybe have to solve that on the model side with a query to determine last recorded ID although I don't understadn why they don't incremenet
 
 		data, err := models.EditMessage(res.ID, res.Labels)
 		if err != nil {
