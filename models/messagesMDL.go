@@ -46,7 +46,7 @@ func GetAllMessages() []Message {
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
-
+	fmt.Println("messages out from DB get all:", messages)
 	return messages
 }
 
@@ -88,7 +88,7 @@ func PostMessage(Subject string, Body string) ([]Message, error) {
 	message := Message{}
 	var entry []Message
 	//Create
-	errTwo := db.QueryRow(`INSERT INTO messages(read, starred, selected, subject, body, labels) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`, false, false, false, Subject, Body, "{}").Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
+	errTwo := db.QueryRow(`INSERT INTO messages(read, starred, selected, subject, body, labels) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`, false, false, false, Subject, Body, "string").Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
 	entry = append(entry, message)
 	if errTwo != nil {
 		return nil, errTwo
