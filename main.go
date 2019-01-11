@@ -57,12 +57,11 @@ func main() {
 	r.Handle("/", http.FileServer(http.Dir("static/")))
 
 	// set router
-	go func() {
+	func() {
 		log.Println("Listening...$1", os.Getenv("PORT"))
-		http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+		http.ListenAndServe(":"+os.Getenv("PORT"), r)
 	}()
 
-	<-stopChan
 	log.Println("Shutting down server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	srv.Shutdown(ctx)
