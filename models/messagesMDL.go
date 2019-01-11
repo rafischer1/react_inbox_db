@@ -79,7 +79,7 @@ func GetOneMessage(id string) []Message {
 }
 
 // PostMessage function
-func PostMessage(Subject string, Body string) ([]Message, error) {
+func PostMessage(Subject string, Body string) error {
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
 		panic(err)
@@ -91,11 +91,11 @@ func PostMessage(Subject string, Body string) ([]Message, error) {
 	errTwo := db.QueryRow(`INSERT INTO messages(read, starred, selected, subject, body, labels) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`, false, false, false, Subject, Body, "string").Scan(&message.ID, &message.Read, &message.Starred, &message.Selected, &message.Subject, &message.Body, &message.Labels)
 	entry = append(entry, message)
 	if errTwo != nil {
-		return nil, errTwo
+		return errTwo
 	}
 
 	fmt.Printf("Last inserted ID: %v\n", message)
-	return entry, errTwo
+	return errTwo
 }
 
 // EditMessage function

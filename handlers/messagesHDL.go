@@ -83,14 +83,14 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 		json.Unmarshal([]byte(str), &res)
 		fmt.Println("Res subject:", res.Subject, "res body:", res.Body)
 
-		data, err := models.PostMessage(res.Subject, res.Body)
+		err := models.PostMessage(res.Subject, res.Body)
 		if err != nil {
 			panic(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, "Content: %v", data)
+		// fmt.Fprint(w, "Content: %v", data)
 
 	}
 }
