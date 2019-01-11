@@ -59,7 +59,7 @@ func main() {
 	// set router
 	go func() {
 		log.Println("Listening...$1", os.Getenv("PORT"))
-		http.ListenAndServe(":"+os.Getenv("PORT"), r)
+		http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	}()
 
 	<-stopChan
