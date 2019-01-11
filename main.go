@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -36,8 +35,6 @@ func main() {
 	defer db.Close()
 	// port := GetPort()
 	r := mux.NewRouter()
-	stopChan := make(chan os.Signal)
-	signal.Notify(stopChan, os.Interrupt)
 
 	srv := &http.Server{
 		Addr:         dbport,
@@ -57,10 +54,9 @@ func main() {
 	r.Handle("/", http.FileServer(http.Dir("static/")))
 
 	// set router
-	func() {
-		log.Println("Listening...$1", os.Getenv("PORT"))
-		http.ListenAndServe(":"+os.Getenv("PORT"), r)
-	}()
+
+	log.Println("Listening...$1", os.Getenv("PORT"))
+	http.ListenAndServe(":"+os.Getenv("PORT"), r)
 
 	log.Println("Shutting down server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
