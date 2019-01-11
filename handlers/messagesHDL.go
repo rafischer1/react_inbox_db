@@ -81,9 +81,9 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 		str := bodyString
 		res := m.Message{}
 		json.Unmarshal([]byte(str), &res)
-		fmt.Println("Res subject:", res.Subject, "res body:", res.Body)
+		fmt.Println("Res subject:", res.Subject, "res body:", res.Body, "res Labels:", res.Labels)
 
-		err := models.PostMessage(res.Subject, res.Body)
+		err := models.PostMessage(res.Subject, res.Body, res.Labels)
 		if err != nil {
 			panic(err)
 		}
