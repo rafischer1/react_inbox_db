@@ -118,7 +118,7 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 		json.Unmarshal([]byte(str), &res)
 		fmt.Println("Res labels", res.Labels, "Res id:", res.ID)
 
-		data, err := models.EditMessage(res.ID, res.Labels)
+		data, err := models.EditMessage(res.ID, res.Labels, res.Read)
 		if err != nil {
 			panic(err)
 		}
