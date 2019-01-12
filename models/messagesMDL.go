@@ -100,8 +100,8 @@ func PostMessage(Subject string, Body string, Labels string) error {
 }
 
 // EditMessage function
-func EditMessage(ID int, Body string, Read bool) ([]Message, error) {
-	fmt.Println("In the model edit id and body:", ID, Body, Read)
+func EditMessage(ID int, Label string, Read bool) ([]Message, error) {
+	fmt.Println("In the model edit id and Label:", ID, Label, Read)
 
 	db, err := sql.Open("postgres", d.ConnStr)
 	if err != nil {
@@ -109,15 +109,15 @@ func EditMessage(ID int, Body string, Read bool) ([]Message, error) {
 	}
 	defer db.Close()
 
-	if len(Body) == 0 {
-		Body = ""
+	if len(Label) == 0 {
+		Label = ""
 	}
 
 	message := Message{}
 	var entry []Message
 	sqlStatement := `UPDATE messages SET read = $3, labels = $2 WHERE id = $1 RETURNING id, labels, read;`
 
-	err = db.QueryRow(sqlStatement, ID, Body, Read).Scan(&message.ID, &message.Labels, &message.Read)
+	err = db.QueryRow(sqlStatement, ID, Label, Read).Scan(&message.ID, &message.Labels, &message.Read)
 	if err != nil {
 		panic(err)
 	}

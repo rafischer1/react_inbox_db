@@ -21,8 +21,8 @@ VALUES
   (7, true, true, false, 'If we connect the sensor, we can get to the HDD port through the redundant IB firewall!', 'Hey, Bilson: The future is scary but you cannot just run back to the past because it is familiar.', 'dev');
   
 
-  ALTER SEQUENCE messages_id_seq RESTART WITH 10;
-  
+  ALTER SEQUENCE messages_id_seq RESTART WITH 8;
+
 -- +goose Down
 DROP TABLE messages;
 
