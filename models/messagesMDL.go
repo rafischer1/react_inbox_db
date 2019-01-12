@@ -46,7 +46,7 @@ func GetAllMessages() []Message {
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("messages out from DB get all:", messages)
+	// fmt.Println("messages out from DB get all:", messages)
 	return messages
 }
 
@@ -109,9 +109,9 @@ func EditMessage(ID int, Body string) ([]Message, error) {
 
 	message := Message{}
 	var entry []Message
-	sqlStatement := `UPDATE messages SET Labels = $2 WHERE id = $1 RETURNING id, Labels;`
+	sqlStatement := `UPDATE messages SET read = $3, labels = $2 WHERE id = $1 RETURNING id, labels, read;`
 
-	err = db.QueryRow(sqlStatement, ID, Body).Scan(&message.ID, &message.Labels)
+	err = db.QueryRow(sqlStatement, ID, Body).Scan(&message.ID, &message.Labels, &message.Read)
 	if err != nil {
 		panic(err)
 	}
