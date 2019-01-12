@@ -2,7 +2,6 @@
 
 > CRUD routing for a RESTful API architecture in Go. PostgreSQL migrations and seeds managed with the vanilla postgres commands.
 
-[Deployed DB LINK](https://fischer-go-inbox.herokuapp.com/)
 
 ```haskell
 CREATE TABLE messages (
