@@ -107,6 +107,10 @@ func EditMessage(ID int, Body string, Read bool) ([]Message, error) {
 		panic(err)
 	}
 
+	if len(Body) == 0 {
+		Body = ""
+	}
+
 	message := Message{}
 	var entry []Message
 	sqlStatement := `UPDATE messages SET read = $3, labels = $2 WHERE id = $1 RETURNING id, labels, read;`
