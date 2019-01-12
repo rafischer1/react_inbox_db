@@ -61,7 +61,7 @@ func GetOneMessage(id string) []Message {
 	defer db.Close()
 
 	row, err := db.Query(`SELECT * FROM messages where id =` + id)
-
+	defer row.Close()
 	var entry []Message
 
 	for row.Next() {
@@ -84,6 +84,7 @@ func PostMessage(Subject string, Body string, Labels string) error {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
 	message := Message{}
 	var entry []Message
@@ -106,6 +107,7 @@ func EditMessage(ID int, Body string, Read bool) ([]Message, error) {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
 	if len(Body) == 0 {
 		Body = ""
@@ -137,5 +139,6 @@ func DeleteMessage(id string) string {
 	if err := row.Err(); err != nil {
 		log.Fatal(err)
 	}
+	defer row.Close()
 	return id
 }
