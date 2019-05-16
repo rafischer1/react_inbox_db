@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/rafischer1/react_inbox_db/models"
 	m "github.com/rafischer1/react_inbox_db/models"
 )
 
@@ -60,10 +59,8 @@ func GetOne(w http.ResponseWriter, req *http.Request) {
 
 // PostMessage is a function
 func PostMessage(w http.ResponseWriter, req *http.Request) {
-	enableCors(&w)
 	fmt.Printf("In the handler post req.Body: %+v", req.Method)
 	if req.Method == "OPTIONS" {
-		enableCors(&w)
 		fmt.Println("Options in POST:", req.Method)
 	}
 	if req.Method == "POST" {
@@ -83,7 +80,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 		json.Unmarshal([]byte(str), &res)
 		fmt.Println("Res subject:", res.Subject, "res body:", res.Body, "res Labels:", res.Labels)
 
-		err := models.PostMessage(res.Subject, res.Body, res.Labels)
+		err := m.PostMessage(res.Subject, res.Body, res.Labels)
 		if err != nil {
 			panic(err)
 		}
@@ -97,9 +94,7 @@ func PostMessage(w http.ResponseWriter, req *http.Request) {
 
 // EditMessage handler calls on the model to handle a PUT
 func EditMessage(w http.ResponseWriter, req *http.Request) {
-	enableCors(&w)
 	if req.Method == "OPTIONS" {
-		enableCors(&w)
 		fmt.Println("Options in EDIT:", req.Method)
 	}
 	if req.Method == "PUT" {
@@ -118,7 +113,7 @@ func EditMessage(w http.ResponseWriter, req *http.Request) {
 		json.Unmarshal([]byte(str), &res)
 		fmt.Println("Res labels", res.Labels, "Res id:", res.ID)
 
-		data, err := models.EditMessage(res.ID, res.Labels, res.Read)
+		data, err := m.EditMessage(res.ID, res.Labels, res.Read)
 		if err != nil {
 			panic(err)
 		}
@@ -134,7 +129,7 @@ func DeleteMessage(w http.ResponseWriter, req *http.Request) {
 	enableCors(&w)
 	reqID := req.URL.String()
 	id := strings.Split(reqID, "/")[2]
-	data := models.DeleteMessage(id)
+	data := m.DeleteMessage(id)
 	// vars := mux.Vars(req)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
